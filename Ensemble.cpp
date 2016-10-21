@@ -28,7 +28,7 @@ void Ensemble::Afficher()
 	cout<<cardMax<<"\r\n";
 	cout<<'{';
 	for(unsigned int i = 0;i<cardAct;i++){
-		cout<<(*tableau)[i];
+		cout<<tableau[i];
 		if(i!=cardAct-1){
 			cout<<',';
 		}
@@ -61,8 +61,8 @@ Ensemble::Ensemble (unsigned int cMax)
 
 } //----- Fin de Ensemble
 
-Ensemble::Ensemble(int t[],unsigned int nbElements);
-	:cardMax(nbElements),cardAct(t.length)
+Ensemble::Ensemble(int t[],unsigned int nbElements)
+	:cardMax(nbElements),cardAct(nbElements)
 // Algorithme :
 //
 {
@@ -70,15 +70,20 @@ Ensemble::Ensemble(int t[],unsigned int nbElements);
 		cout << "Appel au constructeur de <Ensemble>" << endl;
 	#endif
 	tableau=new int[cardMax];
-	for(int i = 0;i<cardAct;i++){
+	for(unsigned int i = 0;i<cardAct;i++){
 		tableau[i]=t[i];
 	}
+	
 	quicksort(0,cardAct);
-	for(int i = 1;i<cardAct;i++){
-		int old=tableau[i-1];
-		if(old==tableau[i]){
+	int old=tableau[0];
+	for(unsigned int i = 1;i<cardAct;i++){
+		int actual=tableau[i];
+		if(old==actual){
 			shift(i,-1);
 			cardAct--;
+			i--;
+		}else if(old<actual){
+			old=actual;
 		}
 	}
 
@@ -99,23 +104,21 @@ Ensemble::~Ensemble( )
 
 //------------------------------------------------------------------ PRIVE
 
-void quicksort(int debut,int fin)
+void Ensemble::quicksort(int debut,int fin)
 {
 	if(debut<fin){
 		int pos=partition(debut,fin);
-		quicksort(debut,pos-1);
+		quicksort(debut,pos);
 		quicksort(pos+1,fin);
 	}
 }
-int partition(int debut,int fin)
+int Ensemble::partition(int debut,int fin)
 {
-	int swap=tableau[debut];
-	tableau[debut]=tableau[fin/2];
-	tableau[fin/2]=swap;
+	int swap=0;
 	int pivotIndex=debut;
 	for(int i = debut+1;i<fin;i++)
 	{
-		if(tableau[i]<tableau[debut]){
+		if(tableau[i]<=tableau[debut]){
 			pivotIndex++;
 			swap=tableau[pivotIndex];
 			tableau[pivotIndex]=tableau[i];
@@ -124,13 +127,13 @@ int partition(int debut,int fin)
 		}
 	}
 	swap=tableau[pivotIndex];
-	tableau[pivotIndex]=tableau[d];
-	tableau[d]=swap;
+	tableau[pivotIndex]=tableau[debut];
+	tableau[debut]=swap;
 	return pivotIndex;
 }
-void shift(int start, int direction)
+void Ensemble::shift(unsigned int start, int direction)
 {
-	for(int i = start;i<cardAct;i++){
+	for(unsigned int i = start;i<cardAct;i++){
 		int temp=tableau[i+direction];
 		tableau[i+direction]=tableau[i];
 		tableau[i]=temp;
