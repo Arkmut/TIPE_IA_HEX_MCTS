@@ -32,9 +32,13 @@ public:
     //
     // Contrat :
     //
-
-	//Mode d'emploi:
-	//
+	void Afficher();
+	//Mode d'emploi: affichage
+	//{} si l'ensemble est vide
+	//{x} singleton
+	//{x,y} sinon
+	//n :cardAct
+	//m : cardMax
 	//Contrat:
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -48,7 +52,7 @@ public:
 //-------------------------------------------- Constructeurs - destructeur
     
     Ensemble(unsigned int cMax=CARD_MAX);
-    // Mode d'emploi :
+    // Mode d'emploi : constructeur par defaut; crée un ensemble vide de taille max cmax
     //
     // Contrat :
     //

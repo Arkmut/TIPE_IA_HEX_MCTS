@@ -21,6 +21,20 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
+void Ensemble::Afficher()
+// Algorithme :
+{
+	cout<<cardAct<<"\r\n";
+	cout<<cardMax<<"\r\n";
+	cout<<'{';
+	for(unsigned int i = 0;i<cardAct;i++){
+		cout<<(*tableau)[i];
+		if(i!=cardAct-1){
+			cout<<',';
+		}
+	}
+	cout<<'}'<<"\r\n";
+}//----- Fin de Méthode
 // type ${file_base}::Méthode ( liste des paramètres )
 // Algorithme :
 //
