@@ -67,7 +67,7 @@ protected:
 //----------------------------------------------------- Attributs protégés
 unsigned int cardMax;
 unsigned int cardAct;
-int[]* tableau;
+int* tableau;
 
 };
 

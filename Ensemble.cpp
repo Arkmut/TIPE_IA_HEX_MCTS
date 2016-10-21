@@ -33,7 +33,7 @@ using namespace std;
 //-------------------------------------------- Constructeurs - destructeur
 
 
-Ensemble::Ensemble (unsigned int cMax=CARD_MAX )
+Ensemble::Ensemble (unsigned int cMax)
 	:cardMax(cMax),cardAct(0)
 // Algorithme :
 //
