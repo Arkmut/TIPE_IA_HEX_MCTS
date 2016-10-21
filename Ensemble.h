@@ -34,11 +34,12 @@ public:
     //
 	void Afficher();
 	//Mode d'emploi: affichage
+	//n :cardAct
+	//m : cardMax
 	//{} si l'ensemble est vide
 	//{x} singleton
 	//{x,y} sinon
-	//n :cardAct
-	//m : cardMax
+	
 	//Contrat:
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -56,7 +57,11 @@ public:
     //
     // Contrat :
     //
-
+	 Ensemble(int t[],unsigned int nbElements);
+    // Mode d'emploi : constructeur a partir d'un tableau c++, avec nbElements la cardinalite max, et la courante, celle effectivement ajoutée
+    //
+    // Contrat : taille de t <= nbElements
+    //
     virtual ~Ensemble ( );
     // Mode d'emploi :
     //

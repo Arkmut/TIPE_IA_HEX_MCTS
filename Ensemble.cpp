@@ -61,6 +61,30 @@ Ensemble::Ensemble (unsigned int cMax)
 
 } //----- Fin de Ensemble
 
+Ensemble::Ensemble(int t[],unsigned int nbElements);
+	:cardMax(nbElements),cardAct(t.length)
+// Algorithme :
+//
+{
+	#ifdef MAP
+		cout << "Appel au constructeur de <Ensemble>" << endl;
+	#endif
+	tableau=new int[cardMax];
+	for(int i = 0;i<cardAct;i++){
+		tableau[i]=t[i];
+	}
+	quicksort(0,cardAct);
+	for(int i = 1;i<cardAct;i++){
+		int old=tableau[i-1];
+		if(old==tableau[i]){
+			shift(i,-1);
+			cardAct--;
+		}
+	}
+
+
+} //----- Fin de Ensemble
+
 
 Ensemble::~Ensemble( )
 // Algorithme :
@@ -75,5 +99,42 @@ Ensemble::~Ensemble( )
 
 //------------------------------------------------------------------ PRIVE
 
+void quicksort(int debut,int fin)
+{
+	if(debut<fin){
+		int pos=partition(debut,fin);
+		quicksort(debut,pos-1);
+		quicksort(pos+1,fin);
+	}
+}
+int partition(int debut,int fin)
+{
+	int swap=tableau[debut];
+	tableau[debut]=tableau[fin/2];
+	tableau[fin/2]=swap;
+	int pivotIndex=debut;
+	for(int i = debut+1;i<fin;i++)
+	{
+		if(tableau[i]<tableau[debut]){
+			pivotIndex++;
+			swap=tableau[pivotIndex];
+			tableau[pivotIndex]=tableau[i];
+			tableau[i]=swap;
+			
+		}
+	}
+	swap=tableau[pivotIndex];
+	tableau[pivotIndex]=tableau[d];
+	tableau[d]=swap;
+	return pivotIndex;
+}
+void shift(int start, int direction)
+{
+	for(int i = start;i<cardAct;i++){
+		int temp=tableau[i+direction];
+		tableau[i+direction]=tableau[i];
+		tableau[i]=temp;
+	}
+}
 //----------------------------------------------------- Méthodes protégées
 
