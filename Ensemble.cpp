@@ -62,9 +62,12 @@ Ensemble::Ensemble (unsigned int cMax)
 } //----- Fin de Ensemble
 
 Ensemble::Ensemble(int t[],unsigned int nbElements)
-	:cardMax(nbElements),cardAct(nbElements)
-// Algorithme :
-//
+	:cardMax(nbElements),cardAct(t.length)
+// Algorithme : 
+//1- copie de tout les el de t
+//2-tri avec le quicksort
+//3- suppression des doublons: (si egalité avec la mémoire, on echange l'el avec la fin (en faisant un shift pour garder l'ordre),
+// puis on decremente la taille de la collection
 {
 	#ifdef MAP
 		cout << "Appel au constructeur de <Ensemble>" << endl;
@@ -73,17 +76,15 @@ Ensemble::Ensemble(int t[],unsigned int nbElements)
 	for(unsigned int i = 0;i<cardAct;i++){
 		tableau[i]=t[i];
 	}
-	
 	quicksort(0,cardAct);
 	int old=tableau[0];
 	for(unsigned int i = 1;i<cardAct;i++){
-		int actual=tableau[i];
-		if(old==actual){
+		
+		if(old==tableau[i]){
 			shift(i,-1);
 			cardAct--;
-			i--;
-		}else if(old<actual){
-			old=actual;
+		}else if(old<tableau[i]){
+			old=tableau[i];
 		}
 	}
 
@@ -105,20 +106,23 @@ Ensemble::~Ensemble( )
 //------------------------------------------------------------------ PRIVE
 
 void Ensemble::quicksort(int debut,int fin)
+//Algorithme: fct recursive qui coupe le tableau en deux autour d'un pivot (cf quicksort cours algo)
 {
 	if(debut<fin){
 		int pos=partition(debut,fin);
-		quicksort(debut,pos);
+		quicksort(debut,pos-1);
 		quicksort(pos+1,fin);
 	}
 }
 int Ensemble::partition(int debut,int fin)
 {
-	int swap=0;
+	int swap=tableau[debut];
+	tableau[debut]=tableau[fin/2];
+	tableau[fin/2]=swap;
 	int pivotIndex=debut;
 	for(int i = debut+1;i<fin;i++)
 	{
-		if(tableau[i]<=tableau[debut]){
+		if(tableau[i]<tableau[debut]){
 			pivotIndex++;
 			swap=tableau[pivotIndex];
 			tableau[pivotIndex]=tableau[i];
