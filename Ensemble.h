@@ -69,15 +69,11 @@ public:
     //
 
 //------------------------------------------------------------------ PRIVE 
-private :
-	void quicksort(int debut,int fin);
-	int partition(int debut,int fin);
-	void shift(unsigned int start, int direction);
-	
-
-
+private:
+ void shift(unsigned int start, int direction);
+  int partition(int debut,int fin);
+ void quicksort(int debut,int fin);
 protected:
-
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
