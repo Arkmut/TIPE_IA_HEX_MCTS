@@ -1,15 +1,15 @@
 /*************************************************************************
                            ${file_base}  -  description
                              -------------------
-    début                : ${date}
+    dÃ©but                : ${date}
     copyright            : (C) ${year} par ${user}
 *************************************************************************/
 
-//---------- Réalisation de la classe Ensemble -------
+//---------- RÃ©alisation de la classe Ensemble -------
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include système
+//-------------------------------------------------------- Include systÃ¨me
 using namespace std;
 #include <iostream>
 
@@ -20,13 +20,13 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- Méthodes publiques
+//----------------------------------------------------- MÃ©thodes publiques
 
-// type ${file_base}::Méthode ( liste des paramètres )
+// type ${file_base}::MÃ©thode ( liste des paramÃ¨tres )
 // Algorithme :
 //
 //{
-//} //----- Fin de Méthode
+//} //----- Fin de MÃ©thode
 
 void Ensemble::Afficher()
 // Algorithme :
@@ -41,7 +41,7 @@ void Ensemble::Afficher()
 		}
 	}
 	cout<<'}'<<"\r\n";
-}//----- Fin de Méthode
+}//----- Fin de MÃ©thode
 
 //TU03
 //TU04
@@ -97,11 +97,24 @@ bool Ensemble::Retirer (int element)
 	Ajuster(-cardMax);
 	return false;
 }
+bool Ensemble::RetirerSansAjuster (int element)
+{
+	for(int i = 0; i < cardAct; i++){
+		if(tableau[i] == element){
+			shift(i+1,-1);
+			cardAct--;
+			//Ajuster(-cardMax);
+			return true;
+		}
+	}
+	//Ajuster(-cardMax);
+	return false;
+}
 
 
 
 
-//------------------------------------------------- Surcharge d'opérateurs
+//------------------------------------------------- Surcharge d'opÃ©rateurs
 
 //-------------------------------------------- Constructeurs - destructeur
 
@@ -202,5 +215,5 @@ void Ensemble::shift(unsigned int start, int direction)
 
 
 
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- MÃ©thodes protÃ©gÃ©es
 
