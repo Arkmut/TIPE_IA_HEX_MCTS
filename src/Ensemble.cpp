@@ -97,33 +97,25 @@ bool Ensemble::Retirer (int element)
 	Ajuster(-cardMax);
 	return false;
 }
-bool Ensemble::RetirerSansAjuster (int element)
-{
-	for(int i = 0; i < cardAct; i++){
-		if(tableau[i] == element){
-			shift(i+1,-1);
-			cardAct--;
-			//Ajuster(-cardMax);
-			return true;
-		}
-	}
-	//Ajuster(-cardMax);
-	return false;
-}
+
 
 unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 
-	int tempCardMax = cardMax,
+	int tempCardMax = cardMax;
+	int tempCardAct = cardAct,
 	unsigned int compteur = 0;
+	int* temp =  new int [cardMax];
+	for(int i = 0; i < cardAct; i++){
+		temp[i] = tableau[i];
+	}
+	for(int i = 0; i <tempCardAct; i++){
 
-	for(int i = 0; i < unEnsemble.cardAct; i++){
-
-		if(Retirer(unEnsemble.tableau[i])){
+		if(Retirer(temp[i])){
 			compteur++;
 		}
 	}
 
-	//Ajuster(tempCardMax-cardMax);
+	Ajuster(tempCardMax-cardMax);
 	return compteur;
 
 }
