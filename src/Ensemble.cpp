@@ -46,7 +46,7 @@ void Ensemble::Afficher()
 bool Ensemble::EstEgal(const Ensemble & unEnsemble) const
 {
 	if(cardAct==unEnsemble.cardAct){
-		for(int i=0; i<cardAct; i++){
+		for(unsigned int i=0; i<cardAct; i++){
 			if(tableau[i]!=unEnsemble.tableau[i]){
 				return false;
 			}
@@ -65,8 +65,7 @@ crduEstInclus Ensemble::EstInclus ( const Ensemble & unEnsemble ) const
 		if(unEnsemble.cardAct < cardAct){
 			return NON_INCLUSION;
 		}else{
-			int temp=0;
-			for(int i=0; i<cardAct; i++){
+			for(unsigned int i=0; i<cardAct; i++){
 				if(!(unEnsemble.appartenanceEntier(tableau[i]))){
 					return NON_INCLUSION;
 				}
@@ -78,7 +77,7 @@ crduEstInclus Ensemble::EstInclus ( const Ensemble & unEnsemble ) const
 
 crduAjouter Ensemble::Ajouter(int aAjouter)
 {
-	for(int i = 0; i < cardAct; i++){
+	for(unsigned int i = 0; i < cardAct; i++){
 		if(tableau[i] == aAjouter){
 			return DEJA_PRESENT;
 		}
@@ -103,7 +102,7 @@ unsigned int Ensemble::Ajuster(int delta)
 	}
 
 	int* temp =  new int [cardMax + delta];
-	for(int i = 0; i < cardAct; i++){
+	for(unsigned int i = 0; i < cardAct; i++){
 		temp[i] = tableau[i];
 	}
 	delete []tableau;
@@ -116,7 +115,7 @@ unsigned int Ensemble::Ajuster(int delta)
 
 bool Ensemble::Retirer (int element)
 {
-	for(int i = 0; i < cardAct; i++){
+	for(unsigned int i = 0; i < cardAct; i++){
 		if(tableau[i] == element){
 			shift(i+1,-1);
 			cardAct--;
@@ -131,17 +130,13 @@ bool Ensemble::Retirer (int element)
 unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 
 	int tempCardMax = cardMax;
-	int tempCardAct = cardAct;
+	int tempCardAct = unEnsemble.cardAct;
 	unsigned int compteur = 0;
-
-	int* temp =  new int [cardMax];
-
-	for(int i = 0; i < cardAct; i++){
+	int* temp =  new int [ unEnsemble.cardMax];
+	for(int i = 0; i < tempCardAct; i++){
 		temp[i] = unEnsemble.tableau[i];
 	}
-
 	for(int i = 0; i <tempCardAct; i++){
-
 		if(Retirer(temp[i])){
 			compteur++;
 		}
