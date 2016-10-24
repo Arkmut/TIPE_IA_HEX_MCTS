@@ -85,7 +85,6 @@ private :
 	void quicksort(int debut,int fin);
 	int partition(int debut,int fin);
 	void shift(unsigned int start, int direction);
-	bool RetirerSansAjuster (int element);
 
 protected:
 
