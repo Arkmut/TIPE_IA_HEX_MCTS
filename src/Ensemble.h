@@ -50,7 +50,8 @@ public:
 	unsigned int Ajuster(int delta);
 	bool Retirer (int element);
 	unsigned int Retirer( const Ensemble & unEnsemble);
-	int Ensemble::Reunir ( const Ensemble & unEnsemble );
+	int Reunir ( const Ensemble & unEnsemble );
+	unsigned int Intersection( const Ensemble & unEnsemble);
 
 
 
