@@ -172,7 +172,31 @@ int Ensemble::Reunir ( const Ensemble & unEnsemble ){
 	return compteur;
 
 }
+unsigned int Ensemble::Intersection ( const Ensemble & unEnsemble ){
 
+	int tempCardAct = unEnsemble.cardAct;
+	unsigned int compteur = 0;
+	int* temp =  new int [ unEnsemble.cardMax];
+	for(int i = 0; i < tempCardAct; i++){
+		temp[i] = unEnsemble.tableau[i];
+	}
+	for(int i = 0;i<CardAct;i++){
+		bool dansLesDeux=false;
+		for(int j = 0; j <tempCardAct; j++){
+			if(tableau[i]==temp[i]){
+				dansLesDeux=true;	
+			}
+		}
+		if(!dansLesDeux){
+			Retirer(tableau[i]);
+			compteur++;
+		}
+	}
+
+	Ajuster(-cardMax);
+	return compteur;
+
+}
 //------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
