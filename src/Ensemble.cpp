@@ -1,15 +1,15 @@
 /*************************************************************************
                            ${file_base}  -  description
                              -------------------
-    dÃ©but                : ${date}
+    début                : ${date}
     copyright            : (C) ${year} par ${user}
 *************************************************************************/
 
-//---------- RÃ©alisation de la classe Ensemble -------
+//---------- Réalisation de la classe Ensemble -------
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include systÃ¨me
+//-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
 
@@ -20,13 +20,13 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- MÃ©thodes publiques
+//----------------------------------------------------- Méthodes publiques
 
-// type ${file_base}::MÃ©thode ( liste des paramÃ¨tres )
+// type ${file_base}::Méthode ( liste des paramètres )
 // Algorithme :
 //
 //{
-//} //----- Fin de MÃ©thode
+//} //----- Fin de Méthode
 
 void Ensemble::Afficher()
 // Algorithme :
@@ -41,7 +41,7 @@ void Ensemble::Afficher()
 		}
 	}
 	cout<<'}'<<"\r\n";
-}//----- Fin de MÃ©thode
+}//----- Fin de Méthode
 
 bool Ensemble::EstEgal(const Ensemble & unEnsemble) const
 {
@@ -55,7 +55,8 @@ bool Ensemble::EstEgal(const Ensemble & unEnsemble) const
 	}
 	return false;
 }
-/*
+
+
 crduEstInclus Ensemble::EstInclus ( const Ensemble & unEnsemble ) const
 {
 	if(EstEgal(unEnsemble)){
@@ -67,12 +68,13 @@ crduEstInclus Ensemble::EstInclus ( const Ensemble & unEnsemble ) const
 			int temp=0;
 			for(int i=0; i<cardAct; i++){
 				if(!(unEnsemble.appartenanceEntier(tableau[i]))){
-
+					return NON_INCLUSION;
 				}
 			}
+			return INCLUSION_LARGE;
 		}
 	}
-}*/
+}
 
 crduAjouter Ensemble::Ajouter(int aAjouter)
 {
@@ -129,12 +131,15 @@ bool Ensemble::Retirer (int element)
 unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 
 	int tempCardMax = cardMax;
-	int tempCardAct = cardAct,
+	int tempCardAct = cardAct;
 	unsigned int compteur = 0;
+
 	int* temp =  new int [cardMax];
+
 	for(int i = 0; i < cardAct; i++){
 		temp[i] = unEnsemble.tableau[i];
 	}
+
 	for(int i = 0; i <tempCardAct; i++){
 
 		if(Retirer(temp[i])){
@@ -147,7 +152,7 @@ unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 
 }
 
-//------------------------------------------------- Surcharge d'opÃ©rateurs
+//------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
 
@@ -168,7 +173,7 @@ Ensemble::Ensemble (unsigned int cMax)
 
 Ensemble::Ensemble(int t[],unsigned int nbtableau)
 	:cardMax(nbtableau),cardAct(nbtableau)
-// Algorithme :z
+// Algorithme :
 //
 {
 	#ifdef MAP
@@ -244,7 +249,7 @@ void Ensemble::shift(unsigned int start, int direction)
 		tableau[i]=temp;
 	}
 }
-bool Ensemble::appartenanceEntier(int entier)
+bool Ensemble::appartenanceEntier(int entier) const
 {
 	bool appartient=false;
 	for(int i=0; i<cardAct; i++){
@@ -257,5 +262,5 @@ bool Ensemble::appartenanceEntier(int entier)
 
 
 
-//----------------------------------------------------- MÃ©thodes protÃ©gÃ©es
+//----------------------------------------------------- Méthodes protégées
 

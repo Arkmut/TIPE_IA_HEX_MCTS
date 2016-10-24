@@ -53,6 +53,9 @@ public:
 
 
 
+
+
+
 //------------------------------------------------- Surcharge d'opérateurs
    
     // Mode d'emploi :
@@ -84,7 +87,7 @@ private :
 	void quicksort(int debut,int fin);
 	int partition(int debut,int fin);
 	void shift(unsigned int start, int direction);
-	bool appartenanceEntier(int entier);
+	bool appartenanceEntier(int entier) const;
 
 protected:
 
