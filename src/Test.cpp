@@ -157,17 +157,19 @@ int main ()
 	//testConctructeurDefaut();
 	//testSecondConstructeur();
 
-	int tab[] = {1,2};
-	Ensemble e(tab,2);
+
+	Ensemble e0;
+
+	int tab1[] = {4,5,6,1};
+	Ensemble e1(tab1,4);
 
 	int tab2[] = {1,2,3,4};
-	Ensemble e2(tab2, 4);
+	Ensemble e2(tab2,4);
 
 
-	e2.Retirer(e);
-	e2.Afficher();
+	cout << e1.Intersection(e0) << endl;
 
-
+	e1.Afficher();
 
 
 	return 0;

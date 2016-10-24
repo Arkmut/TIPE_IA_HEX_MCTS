@@ -85,7 +85,7 @@ crduAjouter Ensemble::Ajouter(int aAjouter)
 
 	if(cardMax == cardAct){
 		return PLEIN;
-	}else if(cardMax > cardAct){
+	}else{
 		tableau[cardAct] = aAjouter;
 		cardAct++;
 		quicksort(0, cardAct);
@@ -149,16 +149,16 @@ unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 }
 int Ensemble::Reunir ( const Ensemble & unEnsemble ){
 	bool reajustement=false;
-	int tempCardMax = cardMax;
-	int tempCardAct = unEnsemble.cardAct;
+	unsigned int tempCardMax = cardMax;
+	unsigned int tempCardAct = unEnsemble.cardAct;
 	int compteur = 0;
 	int* temp =  new int [ unEnsemble.cardMax];
-	for(int i = 0; i < tempCardAct; i++){
+	for(unsigned int i = 0; i < tempCardAct; i++){
 		temp[i] = unEnsemble.tableau[i];
 	}
-	for(int i = 0; i <tempCardAct; i++){
+	for(unsigned int i = 0; i <tempCardAct; i++){
 		crduAjouter resultat=Ajouter(temp[i]);
-		if(resultat==AJOUT){
+		if(resultat==AJOUTE){
 			compteur++;
 		}else if(resultat==PLEIN){
 			Ajuster(1);
@@ -175,21 +175,22 @@ int Ensemble::Reunir ( const Ensemble & unEnsemble ){
 }
 unsigned int Ensemble::Intersection ( const Ensemble & unEnsemble ){
 
-	int tempCardAct = unEnsemble.cardAct;
+	unsigned int tempCardAct = unEnsemble.cardAct;
 	unsigned int compteur = 0;
 	int* temp =  new int [ unEnsemble.cardMax];
-	for(int i = 0; i < tempCardAct; i++){
+	for(unsigned int i = 0; i < tempCardAct; i++){
 		temp[i] = unEnsemble.tableau[i];
 	}
-	for(int i = 0;i<CardAct;i++){
+	for(unsigned int i = 0;i<cardAct;i++){
 		bool dansLesDeux=false;
-		for(int j = 0; j <tempCardAct; j++){
-			if(tableau[i]==temp[i]){
-				dansLesDeux=true;	
+		for(unsigned int j = 0; j <tempCardAct; j++){
+			if(tableau[i]==temp[j]){
+				dansLesDeux=true;
 			}
 		}
 		if(!dansLesDeux){
 			Retirer(tableau[i]);
+			i--;
 			compteur++;
 		}
 	}
