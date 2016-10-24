@@ -149,7 +149,6 @@ unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 }
 int Ensemble::Reunir ( const Ensemble & unEnsemble ){
 	bool reajustement=false;
-	unsigned int tempCardMax = cardMax;
 	unsigned int tempCardAct = unEnsemble.cardAct;
 	int compteur = 0;
 	int* temp =  new int [ unEnsemble.cardMax];
@@ -299,7 +298,7 @@ void Ensemble::shift(unsigned int start, int direction)
 bool Ensemble::appartenanceEntier(int entier) const
 {
 	bool appartient=false;
-	for(int i=0; i<cardAct; i++){
+	for(unsigned int i=0; i<cardAct; i++){
 		if(tableau[i]==entier){
 			appartient=true;
 		}
