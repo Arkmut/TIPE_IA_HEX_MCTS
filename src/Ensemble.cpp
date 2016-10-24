@@ -111,8 +111,22 @@ bool Ensemble::RetirerSansAjuster (int element)
 	return false;
 }
 
+unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 
+	int tempCardMax = cardMax,
+	unsigned int compteur = 0;
 
+	for(int i = 0; i < unEnsemble.cardAct; i++){
+
+		if(Retirer(unEnsemble.tableau[i])){
+			compteur++;
+		}
+	}
+
+	//Ajuster(tempCardMax-cardMax);
+	return compteur;
+
+}
 
 //------------------------------------------------- Surcharge d'opérateurs
 
