@@ -159,7 +159,8 @@ int main ()
 	//testConctructeurDefaut();
 	testSecondConstructeur();
 	//coucou
-	
+	cout << "COUCOU" << endl;
+	cout << "MAIS TU VAS COMMIT ENCULAY ????" << endl;
 	return 0;
 } //----- fin de main
 
