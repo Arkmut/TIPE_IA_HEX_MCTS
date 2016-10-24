@@ -1,15 +1,15 @@
 /*************************************************************************
                            ${file_base}  -  description
                              -------------------
-    début                : ${date}
+    dÃ©but                : ${date}
     copyright            : (C) ${year} par ${user}
 *************************************************************************/
 
-//---------- Réalisation de la classe Ensemble -------
+//---------- RÃ©alisation de la classe Ensemble -------
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include système
+//-------------------------------------------------------- Include systÃ¨me
 using namespace std;
 #include <iostream>
 
@@ -20,13 +20,13 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- Méthodes publiques
+//----------------------------------------------------- MÃ©thodes publiques
 
-// type ${file_base}::Méthode ( liste des paramètres )
+// type ${file_base}::MÃ©thode ( liste des paramÃ¨tres )
 // Algorithme :
 //
 //{
-//} //----- Fin de Méthode
+//} //----- Fin de MÃ©thode
 
 void Ensemble::Afficher()
 // Algorithme :
@@ -41,7 +41,7 @@ void Ensemble::Afficher()
 		}
 	}
 	cout<<'}'<<"\r\n";
-}//----- Fin de Méthode
+}//----- Fin de MÃ©thode
 
 bool Ensemble::EstEgal(const Ensemble & unEnsemble) const
 {
@@ -126,9 +126,28 @@ bool Ensemble::Retirer (int element)
 	return false;
 }
 
+unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 
+	int tempCardMax = cardMax;
+	int tempCardAct = cardAct,
+	unsigned int compteur = 0;
+	int* temp =  new int [cardMax];
+	for(int i = 0; i < cardAct; i++){
+		temp[i] = unEnsemble.tableau[i];
+	}
+	for(int i = 0; i <tempCardAct; i++){
 
-//------------------------------------------------- Surcharge d'opérateurs
+		if(Retirer(temp[i])){
+			compteur++;
+		}
+	}
+
+	Ajuster(tempCardMax-cardMax);
+	return compteur;
+
+}
+
+//------------------------------------------------- Surcharge d'opÃ©rateurs
 
 //-------------------------------------------- Constructeurs - destructeur
 
@@ -238,5 +257,5 @@ bool Ensemble::appartenanceEntier(int entier)
 
 
 
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- MÃ©thodes protÃ©gÃ©es
 
