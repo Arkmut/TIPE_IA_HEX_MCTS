@@ -1,7 +1,7 @@
 /*************************************************************************
                            ${file_base}  -  description
                              -------------------
-    dÃ©but                : ${date}
+    début                : ${date}
     copyright            : (C) ${year} par ${user}
 *************************************************************************/
 
@@ -9,7 +9,7 @@
 #if ! defined ( ENSEMBLE_H )
 #define ENSEMBLE_H
 
-//--------------------------------------------------- Interfaces utilisÃ©es
+//--------------------------------------------------- Interfaces utilisées
 
 //------------------------------------------------------------- Constantes 
 int const CARD_MAX=5;
@@ -18,7 +18,7 @@ enum crduEstInclus {NON_INCLUSION, INCLUSION_LARGE, INCLUSION_STRICTE};
 enum crduAjouter {DEJA_PRESENT, PLEIN, AJOUTE};
 
 //------------------------------------------------------------------------ 
-// RÃ´le de la classe Ensemble
+// Rôle de la classe Ensemble
 //
 //
 //------------------------------------------------------------------------ 
@@ -28,8 +28,8 @@ class Ensemble
 //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- MÃ©thodes publiques
-    // type MÃ©thode ( liste des paramÃ¨tres );
+//----------------------------------------------------- Méthodes publiques
+    // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
@@ -56,7 +56,7 @@ public:
 
 
 
-//------------------------------------------------- Surcharge d'opÃ©rateurs
+//------------------------------------------------- Surcharge d'opérateurs
    
     // Mode d'emploi :
     //
@@ -67,12 +67,12 @@ public:
 //-------------------------------------------- Constructeurs - destructeur
     
     Ensemble(unsigned int cMax=CARD_MAX);
-    // Mode d'emploi : constructeur par defaut; crÃ©e un ensemble vide de taille max cmax
+    // Mode d'emploi : constructeur par defaut; crée un ensemble vide de taille max cmax
     //
     // Contrat :
     //
 	 Ensemble(int t[],unsigned int nbElements);
-    // Mode d'emploi : constructeur a partir d'un tableau c++, avec nbElements la cardinalite max, et la courante, celle effectivement ajoutÃ©e
+    // Mode d'emploi : constructeur a partir d'un tableau c++, avec nbElements la cardinalite max, et la courante, celle effectivement ajoutée
     //
     // Contrat : taille de t <= nbElements
     //
@@ -91,16 +91,16 @@ private :
 
 protected:
 
-//----------------------------------------------------- MÃ©thodes protÃ©gÃ©es
+//----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protÃ©gÃ©s
+//----------------------------------------------------- Attributs protégés
 unsigned int cardMax;
 unsigned int cardAct;
 int* tableau;
 
 };
 
-//--------------------------- Autres dÃ©finitions dÃ©pendantes de <${file_base}>
+//--------------------------- Autres définitions dépendantes de <${file_base}>
 
 #endif // ${include_guard_symbol}
 

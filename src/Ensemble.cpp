@@ -60,17 +60,17 @@ bool Ensemble::EstEgal(const Ensemble & unEnsemble) const
 crduEstInclus Ensemble::EstInclus ( const Ensemble & unEnsemble ) const
 {
 	if(EstEgal(unEnsemble)){
-		return INCLUSION_STRICTE;
+		return INCLUSION_LARGE;
 	}else{
 		if(unEnsemble.cardAct < cardAct){
 			return NON_INCLUSION;
 		}else{
 			for(unsigned int i=0; i<cardAct; i++){
-				if(!(unEnsemble.appartenanceEntier(tableau[i]))){
+				if(!unEnsemble.appartenanceEntier(tableau[i])){
 					return NON_INCLUSION;
 				}
 			}
-			return INCLUSION_LARGE;
+			return INCLUSION_STRICTE;
 		}
 	}
 }
@@ -87,7 +87,8 @@ crduAjouter Ensemble::Ajouter(int aAjouter)
 		return PLEIN;
 	}else if(cardMax > cardAct){
 		tableau[cardAct] = aAjouter;
-		cardAct = cardAct +1;
+		cardAct++;
+		quicksort(0, cardAct);
 		return AJOUTE;
 	}
 }
