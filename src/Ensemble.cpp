@@ -43,8 +43,36 @@ void Ensemble::Afficher()
 	cout<<'}'<<"\r\n";
 }//----- Fin de Méthode
 
-//TU03
-//TU04
+bool Ensemble::EstEgal(const Ensemble & unEnsemble) const
+{
+	if(cardAct==unEnsemble.cardAct){
+		for(int i=0; i<cardAct; i++){
+			if(tableau[i]!=unEnsemble.tableau[i]){
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+/*
+crduEstInclus Ensemble::EstInclus ( const Ensemble & unEnsemble ) const
+{
+	if(EstEgal(unEnsemble)){
+		return INCLUSION_STRICTE;
+	}else{
+		if(unEnsemble.cardAct < cardAct){
+			return NON_INCLUSION;
+		}else{
+			int temp=0;
+			for(int i=0; i<cardAct; i++){
+				if(!(unEnsemble.appartenanceEntier(tableau[i]))){
+
+				}
+			}
+		}
+	}
+}*/
 
 crduAjouter Ensemble::Ajouter(int aAjouter)
 {
@@ -97,7 +125,6 @@ bool Ensemble::Retirer (int element)
 	Ajuster(-cardMax);
 	return false;
 }
-
 
 
 
@@ -198,7 +225,16 @@ void Ensemble::shift(unsigned int start, int direction)
 		tableau[i]=temp;
 	}
 }
-
+bool Ensemble::appartenanceEntier(int entier)
+{
+	bool appartient=false;
+	for(int i=0; i<cardAct; i++){
+		if(tableau[i]==entier){
+			appartient=true;
+		}
+	}
+	return appartient;
+}
 
 
 

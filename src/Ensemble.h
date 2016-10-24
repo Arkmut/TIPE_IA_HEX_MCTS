@@ -14,10 +14,9 @@
 //------------------------------------------------------------- Constantes 
 int const CARD_MAX=5;
 //------------------------------------------------------------------ Types 
-enum crduAjouter
-{
-	DEJA_PRESENT, PLEIN, AJOUTE
-};
+enum crduEstInclus {NON_INCLUSION, INCLUSION_LARGE, INCLUSION_STRICTE};
+enum crduAjouter {DEJA_PRESENT, PLEIN, AJOUTE};
+
 //------------------------------------------------------------------------ 
 // Rôle de la classe Ensemble
 //
@@ -45,8 +44,8 @@ public:
 	
 	//Contrat:
 
-	//TU03
-	//TU04
+	bool EstEgal ( const Ensemble & unEnsemble ) const;
+	crduEstInclus EstInclus ( const Ensemble & unEnsemble ) const;
 	crduAjouter Ajouter(int aAjouter);
 	unsigned int Ajuster(int delta);
 	bool Retirer (int element);
@@ -84,6 +83,7 @@ private :
 	void quicksort(int debut,int fin);
 	int partition(int debut,int fin);
 	void shift(unsigned int start, int direction);
+	bool appartenanceEntier(int entier);
 
 protected:
 

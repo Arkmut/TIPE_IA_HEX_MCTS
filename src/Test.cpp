@@ -156,13 +156,18 @@ int main ()
 {
 	//testConctructeurDefaut();
 	//testSecondConstructeur();
-	int tab[] = {1,2,5,4};
-	Ensemble e(tab, 4);
-	e.Afficher();
-	e.Ajuster(10);
-	e.Afficher();
-	e.Retirer(1);
-	e.Afficher();
+	Ensemble e;
+
+	cout << e.Ajouter(5) << endl;
+
+	int tab[] = {1,2};
+
+	int tab2[] = {1,2,4,6};
+	Ensemble e2(tab2, 4);
+
+	cout << e.Ajouter(5) << endl;
+
+	cout << e.EstEgal(e2) << endl;
 
 	return 0;
 } //----- fin de main
