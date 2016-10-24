@@ -1,15 +1,15 @@
 /*************************************************************************
                            ${file_base}  -  description
                              -------------------
-    dÃ©but                : ${date}
+    début                : ${date}
     copyright            : (C) ${year} par ${user}
 *************************************************************************/
 
-//---------- RÃ©alisation de la classe Ensemble -------
+//---------- Réalisation de la classe Ensemble -------
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include systÃ¨me
+//-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
 
@@ -20,13 +20,13 @@ using namespace std;
 
 //----------------------------------------------------------------- PUBLIC
 
-//----------------------------------------------------- MÃ©thodes publiques
+//----------------------------------------------------- Méthodes publiques
 
-// type ${file_base}::MÃ©thode ( liste des paramÃ¨tres )
+// type ${file_base}::Méthode ( liste des paramètres )
 // Algorithme :
 //
 //{
-//} //----- Fin de MÃ©thode
+//} //----- Fin de Méthode
 
 void Ensemble::Afficher()
 // Algorithme :
@@ -41,7 +41,7 @@ void Ensemble::Afficher()
 		}
 	}
 	cout<<'}'<<"\r\n";
-}//----- Fin de MÃ©thode
+}//----- Fin de Méthode
 
 bool Ensemble::EstEgal(const Ensemble & unEnsemble) const
 {
@@ -198,7 +198,7 @@ unsigned int Ensemble::Intersection ( const Ensemble & unEnsemble ){
 	return compteur;
 
 }
-//------------------------------------------------- Surcharge d'opÃ©rateurs
+//------------------------------------------------- Surcharge d'opérateurs
 
 //-------------------------------------------- Constructeurs - destructeur
 
@@ -308,5 +308,5 @@ bool Ensemble::appartenanceEntier(int entier) const
 
 
 
-//----------------------------------------------------- MÃ©thodes protÃ©gÃ©es
+//----------------------------------------------------- Méthodes protégées
 
