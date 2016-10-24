@@ -106,7 +106,7 @@ unsigned int Ensemble::Retirer ( const Ensemble & unEnsemble ){
 	unsigned int compteur = 0;
 	int* temp =  new int [cardMax];
 	for(int i = 0; i < cardAct; i++){
-		temp[i] = tableau[i];
+		temp[i] = unEnsemble.tableau[i];
 	}
 	for(int i = 0; i <tempCardAct; i++){
 
