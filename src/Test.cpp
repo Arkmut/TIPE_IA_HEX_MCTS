@@ -1,15 +1,15 @@
 /*************************************************************************
                            Xxx  -  description
                              -------------------
-    dÃ©but                : $DATE$
+    début                : $DATE$
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
 
-//---------- RÃ©alisation du module <Xxx> (fichier Xxx.cpp) ---------------
+//---------- Réalisation du module <Xxx> (fichier Xxx.cpp) ---------------
 
 /////////////////////////////////////////////////////////////////  INCLUDE
-//-------------------------------------------------------- Include systÃ¨me
+//-------------------------------------------------------- Include système
 #include <iostream>
 using namespace std;
 //------------------------------------------------------ Include personnel
@@ -23,8 +23,8 @@ using namespace std;
 
 //---------------------------------------------------- Variables statiques
 
-//------------------------------------------------------ Fonctions privÃ©es
-//static type nom ( liste de paramÃ¨tres )
+//------------------------------------------------------ Fonctions privées
+//static type nom ( liste de paramètres )
 // Mode d'emploi :
 //
 // Contrat :
@@ -36,7 +36,7 @@ using namespace std;
 
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-/*type Nom ( liste de paramÃ¨tres )
+/*type Nom ( liste de paramètres )
 // Algorithme :
 //
 {
@@ -45,24 +45,24 @@ using namespace std;
 
 
 
-/// mÃ©thodes pour tester le constructeur par dÃ©faut
+/// méthodes pour tester le constructeur par défaut
 
 static void testConctructeurDefaut1()
-// Algorithme : test constructeur par dÃ©faut sans paramÃ¨tre
+// Algorithme : test constructeur par défaut sans paramètre
 {
 	Ensemble e;
 	e.Afficher();
 } //----- fin de testConctructeurDefaut1
 
 static void testConctructeurDefaut2()
-// Algorithme : test constructeur par dÃ©faut avec 0 comme parametre
+// Algorithme : test constructeur par défaut avec 0 comme parametre
 {
 	Ensemble e(0);
 	e.Afficher();
 } //----- fin de testConctructeurDefaut2
 
 static void testConctructeurDefaut3()
-// Algorithme : test constructeur par dÃ©faut avec 4 comme parametre
+// Algorithme : test constructeur par défaut avec 4 comme parametre
 {
 	Ensemble e(4);
 	e.Afficher();
@@ -70,7 +70,7 @@ static void testConctructeurDefaut3()
 } //----- fin de testConctructeurDefaut3
 
 static void testConctructeurDefaut()
-// Algorithme : appelle les tests du constructeur par dÃ©faut 1, 2 et 3
+// Algorithme : appelle les tests du constructeur par défaut 1, 2 et 3
 {
 	testConctructeurDefaut1();
 	testConctructeurDefaut2();
@@ -80,9 +80,7 @@ static void testConctructeurDefaut()
 
 
 
-
-
-/// mÃ©thodes pour tester le second constructeur
+/// méthodes pour tester le second constructeur
 static void testSecondConstructeur1()
 // Algorithme : test du second constructeur avec un tableau vide
 {
@@ -157,10 +155,15 @@ static void testSecondConstructeur()
 int main ()
 {
 	//testConctructeurDefaut();
-	testSecondConstructeur();
-	//coucou
-	cout << "COUCOU" << endl;
-	cout << "MAIS TU VAS COMMIT ENCULAY ????" << endl;
+	//testSecondConstructeur();
+	int tab[] = {1,2,5,4};
+	Ensemble e(tab, 4);
+	e.Afficher();
+	e.Ajuster(10);
+	e.Afficher();
+	e.Retirer(1);
+	e.Afficher();
+
 	return 0;
 } //----- fin de main
 

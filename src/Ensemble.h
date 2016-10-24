@@ -14,7 +14,10 @@
 //------------------------------------------------------------- Constantes 
 int const CARD_MAX=5;
 //------------------------------------------------------------------ Types 
-
+enum crduAjouter
+{
+	DEJA_PRESENT, PLEIN, AJOUTE
+};
 //------------------------------------------------------------------------ 
 // Rôle de la classe Ensemble
 //
@@ -41,6 +44,14 @@ public:
 	//{x,y} sinon
 	
 	//Contrat:
+
+	//TU03
+	//TU04
+	crduAjouter Ajouter(int aAjouter);
+	unsigned int Ajuster(int delta);
+	bool Retirer (int element);
+
+
 
 //------------------------------------------------- Surcharge d'opérateurs
    
@@ -73,8 +84,6 @@ private :
 	void quicksort(int debut,int fin);
 	int partition(int debut,int fin);
 	void shift(unsigned int start, int direction);
-	
-
 
 protected:
 

@@ -21,6 +21,13 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
+
+// type ${file_base}::Méthode ( liste des paramètres )
+// Algorithme :
+//
+//{
+//} //----- Fin de Méthode
+
 void Ensemble::Afficher()
 // Algorithme :
 {
@@ -35,11 +42,63 @@ void Ensemble::Afficher()
 	}
 	cout<<'}'<<"\r\n";
 }//----- Fin de Méthode
-// type ${file_base}::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
+
+//TU03
+//TU04
+
+crduAjouter Ensemble::Ajouter(int aAjouter)
+{
+	for(int i = 0; i < cardAct; i++){
+		if(tableau[i] == aAjouter){
+			return DEJA_PRESENT;
+		}
+	}
+
+	if(cardMax == cardAct){
+		return PLEIN;
+	}else if(cardMax > cardAct){
+		tableau[cardAct] = aAjouter;
+		cardAct = cardAct +1;
+		return AJOUTE;
+	}
+}
+
+unsigned int Ensemble::Ajuster(int delta)
+{
+	if(delta < 0){
+		int nbADelete =  cardAct - cardMax;
+		if(delta < nbADelete){
+			delta = nbADelete;
+		}
+	}
+
+	int* temp =  new int [cardMax + delta];
+	for(int i = 0; i < cardAct; i++){
+		temp[i] = tableau[i];
+	}
+	delete []tableau;
+	tableau = temp;
+
+	cardMax = cardMax + delta;
+
+	return cardMax;
+}
+
+bool Ensemble::Retirer (int element)
+{
+	for(int i = 0; i < cardAct; i++){
+		if(tableau[i] == element){
+			shift(i+1,-1);
+			cardAct--;
+			Ajuster(-cardMax);
+			return true;
+		}
+	}
+	Ajuster(-cardMax);
+	return false;
+}
+
+
 
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -61,9 +120,9 @@ Ensemble::Ensemble (unsigned int cMax)
 
 } //----- Fin de Ensemble
 
-Ensemble::Ensemble(int t[],unsigned int nbElements)
-	:cardMax(nbElements),cardAct(nbElements)
-// Algorithme :
+Ensemble::Ensemble(int t[],unsigned int nbtableau)
+	:cardMax(nbtableau),cardAct(nbtableau)
+// Algorithme :z
 //
 {
 	#ifdef MAP
@@ -139,5 +198,9 @@ void Ensemble::shift(unsigned int start, int direction)
 		tableau[i]=temp;
 	}
 }
+
+
+
+
 //----------------------------------------------------- Méthodes protégées
 
