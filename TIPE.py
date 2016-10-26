@@ -64,7 +64,7 @@ class Plateau:
                 i += 1
             #On applique récursivement chemin à chaque case de la liste contenant un pion de joueur
             for i in range(0, len(ptsAdja)):
-                if((self.mat[ptsAdja[i][0], ptsAdja[i][1]] == joueur) && (self.chemin(joueur, ptsAdja[i][0], ptsAdja[i][1], dejaVu))):
+                if((self.mat[ptsAdja[i][0], ptsAdja[i][1]] == joueur) and (self.chemin(joueur, ptsAdja[i][0], ptsAdja[i][1], dejaVu))):
                         return True
             return False
         
