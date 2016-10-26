@@ -28,7 +28,7 @@ class Plateau:
         else:
             xx = np.linspace(0,self.taille, self.taille)
             yy = np.linspace(0,self.taille, self.taille)
-            #plt.pcolormesh(xx,yy,self.taille, shading='flat')
+            
             plt.imshow(self.mat)
             plt.axis('image')
             plt.draw()
