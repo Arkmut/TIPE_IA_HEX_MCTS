@@ -22,7 +22,7 @@ class Plateau:
             s = ""
             for i in range(0, self.taille):
                 s += str(i) + "   "
-            print("                  x\y", s)
+            print("  " * self.taille + "x\y", s)
             for i in range(0, self.taille):
                 print("  " * (self.taille - i - 1), i, self.mat[i])
         elif(nAffichage == 2):
@@ -72,14 +72,12 @@ class Plateau:
         sortie = False
         if(joueur == 1):
             for i in range(0, self.taille):
-                if(self.mat[i,0] == joueur):
-                    if(not(sortie)):
-                        sortie = self.chemin(joueur, i, 0, [])
+                if(self.mat[i,0] == joueur) and not(sortie):
+                    sortie = self.chemin(joueur, i, 0, [])
         if(joueur == 2):
             for i in range(0, self.taille):
-                if(self.mat[0,i] == joueur):
-                    if(not(sortie)):
-                        sortie = self.chemin(joueur, 0, i, [])
+                if(self.mat[0,i] == joueur) and not(sortie):
+                    sortie = self.chemin(joueur, 0, i, [])
         return sortie
 
 ##
@@ -87,7 +85,7 @@ class Plateau:
 plateau = Plateau(9)
 joueur = 1
 pasDeGagnant = True
-plt.show()
+
 while(pasDeGagnant):
     marchePas = True
     while(marchePas):
