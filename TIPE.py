@@ -1,14 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 class Plateau:
     # une case est vide (=0) joueur 1 (=1) et joueur 2 (=2)
     mat = []
     taille = 0
+
     def __init__(self, largeur):
         self.taille = largeur
         self.mat = np.zeros((self.taille, self.taille))
     
-    def joue(self,joueur, i,j):
+    def joue(self, joueur, i, j):
         if(self.mat[i,j] == 0):
             self.mat[i,j] = joueur
             return True
@@ -32,34 +34,37 @@ class Plateau:
             plt.draw()
             #plt.show()
     
-    def chemin(self, joueur, xDepart, yDepart, pileDejaParcouru):
-        pileDejaParcouru.append((xDepart, yDepart))
+    def chemin(self, joueur, xDepart, yDepart, dejaVu):
+        dejaVu.append((xDepart, yDepart))
+        #Cas de base, on est arrivé de l'autre coté du plateau
         if((yDepart == self.taille-1 and joueur == 1) or (xDepart == self.taille-1 and joueur == 2)):
             return True
         else:
-            ptsAdjacents = []
+            #On créé la liste des cases adjacentes
+            ptsAdja = []
             if(xDepart < self.taille-1):
-                ptsAdjacents.append((xDepart+1, yDepart))
+                ptsAdja.append((xDepart+1, yDepart))
                 if(yDepart < self.taille-1):
-                    ptsAdjacents.append((xDepart+1, yDepart+1))
+                    ptsAdja.append((xDepart+1, yDepart+1))
             if(xDepart > 0):
-                ptsAdjacents.append((xDepart-1,yDepart))
+                ptsAdja.append((xDepart-1, yDepart))
                 if(yDepart > 0):
-                    ptsAdjacents.append((xDepart-1, yDepart-1))
+                    ptsAdja.append((xDepart-1, yDepart-1))
             if(yDepart < self.taille-1):
-                ptsAdjacents.append((xDepart, yDepart+1))
+                ptsAdja.append((xDepart, yDepart+1))
             if(yDepart > 0):
-                ptsAdjacents.append((xDepart, yDepart-1))
-            i = 0
-            while(i < len(ptsAdjacents)):
-                for j in range(0, len(pileDejaParcouru)):
-                    if(pileDejaParcouru[j] == ptsAdjacents[i]):
-                        ptsAdjacents.remove(ptsAdjacents[i])
-                        i -= 1
+                ptsAdja.append((xDepart, yDepart-1))
+            #On retire à cette liste les cases déjà visitées
+            i = 0 
+            while(i < len(ptsAdja)):
+                for j in range(0, len(dejaVu)):
+                    if(dejaVu[j] == ptsAdja[i]):
+                        ptsAdja.remove(ptsAdja[i])
+                        break
                 i += 1
-            for i in range(0,len(ptsAdjacents)):
-                if(self.mat[ptsAdjacents[i][0], ptsAdjacents[i][1]]==joueur):
-                    if(self.chemin(joueur, ptsAdjacents[i][0], ptsAdjacents[i][1],pileDejaParcouru)):
+            #On applique récursivement chemin à chaque case de la liste contenant un pion de joueur
+            for i in range(0, len(ptsAdja)):
+                if((self.mat[ptsAdja[i][0], ptsAdja[i][1]] == joueur) && (self.chemin(joueur, ptsAdja[i][0], ptsAdja[i][1], dejaVu))):
                         return True
             return False
         
@@ -76,6 +81,8 @@ class Plateau:
                     if(not(sortie)):
                         sortie = self.chemin(joueur, 0, i, [])
         return sortie
+
+##
 
 plateau = Plateau(9)
 joueur = 1
