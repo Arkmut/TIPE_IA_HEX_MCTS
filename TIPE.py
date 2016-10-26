@@ -15,20 +15,18 @@ class Plateau:
         else:
             return False
 
-    def affiche(self, texte):
-        if(texte):
-            l = []
+    def affiche(self, nAffichage):
+        if(nAffichage == 1):
             s = ""
             for i in range(0, self.taille):
-                l.append(i)
-                s += str(i)+"   "
+                s += str(i) + "   "
             print("x\y", s)
-            for i in range(0, len(l)):
-                print(l[i], self.mat[i])
-        else:
+            for i in range(0, self.taille):
+                print("  " * i, i, self.mat[i])
+        elif(nAffichage == 2):
             xx = np.linspace(0,self.taille, self.taille)
             yy = np.linspace(0,self.taille, self.taille)
-            
+            #plt.pcolormesh(xx,yy,self.taille, shading='flat')
             plt.imshow(self.mat)
             plt.axis('image')
             plt.draw()
@@ -96,6 +94,6 @@ while(pasDeGagnant):
     pasDeGagnant = not(plateau.checkVictoire(joueur))
     if(pasDeGagnant):
         joueur = 3 - joueur
-    plateau.affiche(True)
+    plateau.affiche(1)
     
 print("joueur n°" + str(joueur) + " gagne")
