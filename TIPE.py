@@ -20,9 +20,9 @@ class Plateau:
             s = ""
             for i in range(0, self.taille):
                 s += str(i) + "   "
-            print("x\y", s)
+            print("                  x\y", s)
             for i in range(0, self.taille):
-                print("  " * i, i, self.mat[i])
+                print("  " * (self.taille - i - 1), i, self.mat[i])
         elif(nAffichage == 2):
             xx = np.linspace(0,self.taille, self.taille)
             yy = np.linspace(0,self.taille, self.taille)
