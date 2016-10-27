@@ -60,6 +60,7 @@ class Plateau:
                 for j in range(0, len(dejaVu)):
                     if(dejaVu[j] == ptsAdja[i]):
                         ptsAdja.remove(ptsAdja[i])
+                        i -= 1
                         break
                 i += 1
             #On applique récursivement chemin à chaque case de la liste contenant un pion de joueur
