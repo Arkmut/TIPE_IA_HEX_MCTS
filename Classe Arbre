@@ -1,0 +1,7 @@
+class Arbre:
+    def __init__(self,racine):
+        self.racine = racine
+        self.fils = []
+        
+    def ajout(self,elements):
+        (self.fils).append(elements)
