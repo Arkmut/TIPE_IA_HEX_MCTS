@@ -1,3 +1,5 @@
+import random as rd
+
 #Crée un arbre de racine plateau et de fils les coups possibles en un coup
 def coupsPossibles(plateau):
     coups = Arbre(plateau)
@@ -6,14 +8,6 @@ def coupsPossibles(plateau):
             if (plateau.mat[i,j] == 0):
                 coups.ajout(Arbre([i,j]))
     return coups
-
-#On garde deepCopy sous le coude au cas où, mais on en a plus besoin ici maintenant qu'on utilise les arbres
-#def deepcopy(plateau):
-#    plat = Plateau(plateau.taille)
-#    for i in range(plateau.taille):
-#        for j in range(plateau.taille):
-#            plat.mat[i,j] = plateau.mat[i,j]
-#    return plat
 
 #Crée un arbre de racine plateau qui représente toutes les séries de nbEtage coups
 def arbreCoups(plateau, nbEtage, joueur):
@@ -36,3 +30,25 @@ def afficheArbre(arbre, nEtage = 0):
         print("   " * nEtage, arbre.racine)
         for elt in arbre.fils:
             afficheArbre(elt, nEtage + 1)
+
+def deepcopy(plateau):
+   plat = Plateau(plateau.taille)
+   for i in range(plateau.taille):
+       for j in range(plateau.taille):
+           plat.mat[i,j] = plateau.mat[i,j]
+   return plat
+
+def partieAleat(plateau, joueur):
+    plat = deepcopy(plateau)
+    coups = coupsPossibles(plat).fils
+    coupsJoues = []
+    while coups != []:
+        k = rd.randint(0, len(coups) - 1)
+        coupsJoues.append(coups.pop(k).racine)
+    for k in coupsJoues:
+        plateau.joue(joueur, k[0], k[1])
+        joueur = 3 - joueur
+    if plateau.checkVictoire(1):
+        return 1
+    else:
+        return 2
