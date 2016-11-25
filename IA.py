@@ -52,3 +52,14 @@ def partieAleat(plateau, joueur):
         return 1
     else:
         return 2
+# fonction qui permet d'introduire les deux parametres de notation des noeuds : nombre de visite + resultat de la partie
+def transfo(arbre):
+    def aux(arbre):
+        if arbre.fils == []:
+            arbre.racine = [arbre.racine, 0, 0]
+        else:
+            arbre.racine = [arbre.racine, 0, 0]
+            for k in arbre.fils:
+                aux(k)
+    for k in arbre.fils:
+        aux(k)
