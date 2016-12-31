@@ -5,8 +5,8 @@ def coupsPossibles(plateau):
     coups = Arbre(plateau)
     for i in range (plateau.taille):
         for j in range(plateau.taille):
-            if (plateau.mat[i,j] == 0):
-                coups.ajout(Arbre([i,j]))
+            if (plateau.mat[i][j] == 0):
+                coups.ajout(Arbre([i, j]))
     return coups
 
 #Crée un arbre de racine plateau qui représente toutes les séries de nbEtage coups
@@ -35,7 +35,7 @@ def deepcopy(plateau):
    plat = Plateau(plateau.taille)
    for i in range(plateau.taille):
        for j in range(plateau.taille):
-           plat.mat[i,j] = plateau.mat[i,j]
+           plat.mat[i][j] = plateau.mat[i][j]
    return plat
 
 def partieAleat(plateau, joueur):
@@ -52,14 +52,3 @@ def partieAleat(plateau, joueur):
         return 1
     else:
         return 2
-# fonction qui permet d'introduire les deux parametres de notation des noeuds : nombre de visite + resultat de la partie
-def transfo(arbre):
-    def aux(arbre):
-        if arbre.fils == []:
-            arbre.racine = [arbre.racine, 0, 0]
-        else:
-            arbre.racine = [arbre.racine, 0, 0]
-            for k in arbre.fils:
-                aux(k)
-    for k in arbre.fils:
-        aux(k)
