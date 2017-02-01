@@ -1,5 +1,29 @@
 import random as rd
 
+'''
+Ici sont utilisé la structure de plateau et la structure d'arbre.
+Cette dernière est utilisée afin de représenter l'arbre des coups explorés par MCTS.
+Elle s'agence de la manière suivante:
+    - arbre.racine contient une liste de deux éléments, respectivement:
+        - un couple de coordonées [i, j] représentant un coup
+            OU , s'il sagit du sommet global de l'arbre, du plateau
+        - un couple de notation [x, y] avec:
+            - x le nombre de parties gagnées en jouant ce coup
+            - y le nombre de fois que ce coup a été exploré
+    - arbre.fils est la liste des arbres représentant les coups explorés ultérieurs au coup de la racine.
+    
+A la fin de chaque tour de boucle de la fonction mcts, l'arbre des coups doit respecter les propriétés suivantes:
+    -l'arbre est du type décrit ci-dessus
+    -les fils d'un arbre ne peuvent être que des arbres
+    -un coup n'est pas présent dans sa propre descendance
+    -le nombre de parties gagné d'un coup est la somme du nombre de parties gagnées des coups fils
+    -le nombre de fois qu'un coup a été exploré est la somme du nombre de fois que les coups fils ont été exploré
+    -tout coup a été noté au moins une fois
+'''
+
+
+## Fonctions diverses
+
 #Crée un arbre de racine plateau et de fils les coups possibles en un coup
 def coupsPossibles(plateau):
     coups = Arbre(plateau)
@@ -23,14 +47,7 @@ def arbreCoups(plateau, nbEtage, joueur):
     return aux(abr, nbEtage - 1, joueur)
 #joueur n'a pour l'instant pas d'utilité ici
 
-def afficheArbre(arbre, nEtage = 0):
-    if arbre.fils == []:
-        print("   " * nEtage, arbre.racine)
-    else:
-        print("   " * nEtage, arbre.racine)
-        for elt in arbre.fils:
-            afficheArbre(elt, nEtage + 1)
-
+#Effectue une copie en mémoire du plateau
 def deepcopy(plateau):
    plat = Plateau(plateau.taille)
    for i in range(plateau.taille):
@@ -38,6 +55,7 @@ def deepcopy(plateau):
            plat.mat[i][j] = plateau.mat[i][j]
    return plat
 
+#Joue une partie aléatoire à partir d'un état du plateau et renvoie le joueur gagnant
 def partieAleat(plateau, joueur):
     plat = deepcopy(plateau)
     coups = coupsPossibles(plat).fils
@@ -52,3 +70,88 @@ def partieAleat(plateau, joueur):
         return 1
     else:
         return 2
+
+def parcoursProfondeur(arbre):
+    #action sur racine
+    if arbre.fils != []:
+        for elt in arbre.fils:
+            parcoursProfondeur(elt)
+
+#Ajoute au noeuds un couple pour la notation
+def transfoArbre(arbre):
+    arbre.racine = [arbre.racine, [0, 0]]
+    if arbre.fils != []:
+        for elt in arbre.fils:
+            transfoArbre(elt)
+
+##MCTS
+
+#Coeur de l'algorithme
+def mcts(arbre):
+    for _ in range(1000):
+        p_copy = deepcopy(arbre.racine)
+        #SELECTION d'un coup à explorer
+        select, chemin = selection(arbre, p_copy)  #/!\ Modifie l'état du plateau
+        #EXPANSION : on ajoute à l'arbre des coups les coups ultérieurs au coup sélectionné 
+        expansion(select, p_copy)
+        #SIMULATION de parties purement aléatoire pour les coups nouvellement rajoutés à l'arbre
+        gagnees, jouees = simulation(select, p_copy) 
+        #RETROPROPAGATION: on actualise les notes des coups antérieurs avec les coups fraîchements notés
+        backtracking(arbre, chemin, gagnee, jouees)
+    return select(arbre.fils)
+
+#renvoie l'arbre du coup sélectionné et le chemin pour parvenir à ce coup
+def selection(arbre, plateau, chemin = []):
+    if arbre.fils = []:
+        return arbre, chemin
+    else:
+        noteMax = 0
+        rangMax = 0
+        n = arbre.racine[1][1] #nombre de parties jouées depuis cette racine
+        l = len(arbre.fils) #nombre de fils
+        for k in range(l):
+            x = arbre.fils[k].racine[1][0] #nb de parties gagnées par le fils k
+            y = arbre.fils[k].racine[1][1] #nb de partie jouées depuis le fils k
+            note = (x/y) * (1 - y/n) #fonction de notation
+            if note > noteMax:
+                noteMax = note
+                rangMax = k
+        chemin.append(rangMax) # chemin est une liste d'int. 
+        #Chaque int indique une place de la liste arbre.fils et donc le coup suivant
+        plateau.joue(1, arbre.fils[rangMax].racine[0][0], arbre.fils[rangMax].racine[0][1])
+        return selection(arbre.fils[rangMax], chemin)
+
+def expansion(arbre, plateau):
+    coups = coupsPossibles(plateau)
+    transfoArbre(coups)
+    arbre.fils = coups.fils
+    
+def simulation(arbre, plateau, n = 1): #n le nb de parties simulées par fils créé
+    gagnees = 0
+    jouees = 0
+    for fils in arbre.fils:
+        plateau.joue(1, fils.racine[0][0], fils.racine[0][1])
+        for _ in range(n):
+            x = partieAleat(plateau, 2)# x = 1 ou 2 selon qui gagne
+            fils.racine[1][1] += 1 #on rajoute une visite au fils  
+            jouees += 1 
+            if x == 1:
+                fils.racine[1][0] += 1 #on rajoute une victoire
+                gagnee += 1  
+        plateau.joue(0, fils.racine[0][0], fils.racine[0][1])
+    return gagnees, jouees
+
+def backtracking(arbre, chemin, gagnees, jouees):
+    if chemin == []:
+        ajout_gain = gagnees - arbre.racine[1][0]
+        ajout_jouees = jouees - arbre.racine[1][1]
+        arbre.racine[1][0] = gagnees
+        arbre.racine[1][1] = jouees
+        return ajout_gain, ajout_jouees
+    else:
+        ajout_gain, ajout_jouees = backtracking(arbre.fils[chemin[0]], chemin[1:], gagnees, jouees)
+        arbre.racine[1][0] += ajout_gain
+        arbre.racine[1][1] += ajout_jouees
+        return ajout_gain, ajout_jouees
+
+    
