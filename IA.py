@@ -89,7 +89,7 @@ def transfoArbre(arbre):
 #Coeur de l'algorithme
 def mcts(arbre):
     for _ in range(1000):
-        p_copy = deepcopy(arbre.racine) # on travaille sur une copie du plateau
+        p_copy = deepcopy(arbre.racine)
         #SELECTION d'un coup à explorer
         select, chemin = selection(arbre, p_copy)  #/!\ Modifie l'état du plateau
         #EXPANSION : on ajoute à l'arbre des coups les coups ultérieurs au coup sélectionné 
@@ -98,28 +98,34 @@ def mcts(arbre):
         gagnees, jouees = simulation(select, p_copy) 
         #RETROPROPAGATION: on actualise les notes des coups antérieurs avec les coups fraîchements notés
         backtracking(arbre, chemin, gagnee, jouees)
-    return select(arbre.fils)
+    noteMax, rangMax = minimise(arbre.fils)
+    selected = arbre.fils[k]
+    
+#renvoie la note et le rang du fils de meilleure notation
+def minimise(listeFils):
+    noteMax = 0
+    rangMax = 0
+    l = len(listeFils) #nombre de fils
+    for k in range(l):
+        x = listeFils[k].racine[1][0] #nb de parties gagnées par le fils k
+        y = listeFils[k].racine[1][1] #nb de partie jouées depuis le fils k
+        note = y - x #fonction de notation
+        if note < noteMax:
+            noteMax = note
+            rangMax = k
+    return noteMax, rangMax
 
 #renvoie l'arbre du coup sélectionné et le chemin pour parvenir à ce coup
-def selection(arbre, plateau, chemin = [], joueur = 1):
+def selection(arbre, plateau, chemin = []): 
     if arbre.fils = []:
         return arbre, chemin
     else:
-        noteMax = 0
-        rangMax = 0
-        # n = arbre.racine[1][1] # nombre de parties jouées depuis cette racine
-        # l = len(arbre.fils) # nombre de fils
-        for k in range(l):
-            x = arbre.fils[k].racine[1][0] #nb de parties gagnées par le fils k
-            y = arbre.fils[k].racine[1][1] #nb de partie jouées depuis le fils k
-            note = y - x #fonction de notation
-            if note < noteMax: #on essaie en fait de minimiser noteMax
-                noteMax = note
-                rangMax = k
+        #n = arbre.racine[1][1] #nombre de parties jouées depuis cette racine
+        noteMax, rangMax = minimise(arbre.fils)
         chemin.append(rangMax) # chemin est une liste d'int. 
         #Chaque int indique une place de la liste arbre.fils et donc le coup suivant
-        plateau.joue(joueur, arbre.fils[rangMax].racine[0][0], arbre.fils[rangMax].racine[0][1])
-        return selection(arbre.fils[rangMax], chemin, 3 - joueur)
+        plateau.joue(1, arbre.fils[rangMax].racine[0][0], arbre.fils[rangMax].racine[0][1])
+        return selection(arbre.fils[rangMax], chemin)
 
 def expansion(arbre, plateau):
     coups = coupsPossibles(plateau)
