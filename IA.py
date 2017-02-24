@@ -97,8 +97,8 @@ def rechercheCoup(arbre, x, y, plateau):
     for elt in arbre.fils:
         if [x, y] == elt.racine[0]:
             elt.racine[0] = plateau
-            print("fail")
             return elt
+    print("fail")
     return initialisation(plateau) 
     #quand le joueur joue un coup non présent dans l'arbre, n'est pas sensé arriver
 
@@ -117,7 +117,10 @@ def mcts(arbre):
         #RETROPROPAGATION: on actualise les notes des coups antérieurs avec les coups fraîchements notés
         backtracking(arbre, chemin, gagnees, jouees)
     rangMax = minimise(arbre.fils)
-    #arbre.affiche()
+    print("rang max out: ",rangMax)
+    print("arbre apres \n")
+    arbre.affiche(0)
+
     return arbre.fils[rangMax]
     
 

@@ -1,9 +1,10 @@
+
 plateau = Plateau(5)
 joueur = 1
 pasDeGagnant = True
 arbreCoups = initialisation(plateau)
 
-# while(pasDeGagnant):
+#while(pasDeGagnant):
 #     marchePas = True
 #     while(marchePas):
 #         if joueur == 1:
@@ -24,7 +25,10 @@ while(pasDeGagnant):
     y = -1
     while(marchePas):
         if joueur == 1:
+            arbreCoups.affiche(0)
             arbreCoups = mcts(arbreCoups)
+            print("arbre final \n")
+            arbreCoups.afficheRacine()
             x = arbreCoups.racine[0][0]
             y = arbreCoups.racine[0][1]
             arbreCoups.racine[0] = plateau
