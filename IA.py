@@ -1,4 +1,5 @@
 import random as rd
+import time
 
 '''
 Ici sont utilisé la structure de plateau et la structure d'arbre.
@@ -88,7 +89,7 @@ def transfoArbre(arbre):
 def initialisation(plateau):
     arbre = coupsPossibles(plateau)
     transfoArbre(arbre)
-    gagnees, jouees = simulation(arbre, plateau, 1, 3)
+    gagnees, jouees = simulation(arbre, plateau, 1, 5)
     arbre.racine[1][0] = gagnees
     arbre.racine[1][1] = jouees
     return arbre
@@ -97,8 +98,8 @@ def rechercheCoup(arbre, x, y, plateau):
     for elt in arbre.fils:
         if [x, y] == elt.racine[0]:
             elt.racine[0] = plateau
-            print("fail")
             return elt
+    print("fail")
     return initialisation(plateau) 
     #quand le joueur joue un coup non présent dans l'arbre, n'est pas sensé arriver
 
@@ -106,22 +107,38 @@ def rechercheCoup(arbre, x, y, plateau):
 
 #Coeur de l'algorithme
 def mcts(arbre):
-    for k in range(500):
+    t0 = time.time()
+    t1 = t0
+    while t1 < t0 + 15:
         p_copy = deepcopy(arbre.racine[0])
         #SELECTION d'un coup à explorer
         select, chemin, joueur = selection(arbre, p_copy, [], 1)  #/!\ Modifie l'état du plateau p_copy
         #EXPANSION : on ajoute à l'arbre des coups les coups ultérieurs au coup sélectionné 
         expansion(select, p_copy)
         #SIMULATION de parties purement aléatoire pour les coups nouvellement rajoutés à l'arbre
-        gagnees, jouees = simulation(select, p_copy, joueur, 3) 
+        gagnees, jouees = simulation(select, p_copy, joueur, 5) 
         #RETROPROPAGATION: on actualise les notes des coups antérieurs avec les coups fraîchements notés
         backtracking(arbre, chemin, gagnees, jouees)
-    rangMax = minimise(arbre.fils)
+        t1 = time.time()
+    coupSelect = minimise(arbre.fils)
     #arbre.affiche()
-    return arbre.fils[rangMax]
+    return arbre.fils[coupSelect]
     
 
-def minimise(listeFils):
+def minimise(listeFils): #si l'IA doit jouer
+    noteMin = listeFils[0].racine[1][1] - listeFils[0].racine[1][0]
+    rangMin = 0
+    l = len(listeFils) #nombre de fils
+    for k in range(1, l):
+        x = listeFils[k].racine[1][0] #nb de parties gagnées par le fils k
+        y = listeFils[k].racine[1][1] #nb de partie jouées depuis le fils k
+        note = y - x #fonction de notation : nb de parties perdues
+        if note < noteMin: # on essaie de maximiser le nb de parties perdues
+            noteMin = note
+            rangMin = k
+    return rangMin
+
+def maximise(listeFils): #Si le joueur doit jouer
     noteMax = listeFils[0].racine[1][1] - listeFils[0].racine[1][0]
     rangMax = 0
     l = len(listeFils) #nombre de fils
@@ -129,7 +146,7 @@ def minimise(listeFils):
         x = listeFils[k].racine[1][0] #nb de parties gagnées par le fils k
         y = listeFils[k].racine[1][1] #nb de partie jouées depuis le fils k
         note = y - x #fonction de notation : nb de parties perdues
-        if note < noteMax: # on essaie en fait de minimiser le nb de parties perdues
+        if note > noteMax: # on essaie de minimiser le nb de parties perdues
             noteMax = note
             rangMax = k
     return rangMax
@@ -139,12 +156,15 @@ def selection(arbre, plateau, chemin, joueur):
     if arbre.fils == []:
         return arbre, chemin, joueur
     else:
-        #n = arbre.racine[1][1] #nombre de parties jouées depuis cette racine
-        rangMax = minimise(arbre.fils)
-        chemin.append(rangMax) # chemin est une liste d'int. 
+        #L'IA essaie de jouer les meilleurs coups pour elle, et le joueur les plus mauvais coups pour l'IA
+        if joueur == 1:
+            coupSelect = minimise(arbre.fils)
+        else:
+            coupSelect = maximise(arbre.fils)
+        chemin.append(coupSelect) # chemin est une liste d'int. 
         #Chaque int indique une place de la liste arbre.fils et donc le coup suivant
-        plateau.joue(joueur, arbre.fils[rangMax].racine[0][0], arbre.fils[rangMax].racine[0][1])
-        return selection(arbre.fils[rangMax], plateau, chemin, 3 - joueur)
+        plateau.joue(joueur, arbre.fils[coupSelect].racine[0][0], arbre.fils[coupSelect].racine[0][1])
+        return selection(arbre.fils[coupSelect], plateau, chemin, 3 - joueur)
 
 def expansion(arbre, plateau):
     coups = coupsPossibles(plateau)
