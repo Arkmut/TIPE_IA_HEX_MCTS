@@ -1,4 +1,9 @@
 import matplotlib.pyplot as plt
+''' Un plateau de jeu est representé par une matrice, dont les dimensions sont fixées par la "largeur" du plateau. Voici les fonctions dont la classe est constituée:
+    -Joue actualise le plateau en rentrant le numéro du joueur aux coordonnées demandées
+    -Affiche permet de visualiser le plateau plus facilement avec sa forme de losange (L'affichage est à améliorer)
+    -Chemin explore les 6 cases adjacentes pour verifier s'il existe un chemin d'un bord à l'autre du plateau
+    -CheckVictoire renvoie le joueur gagnant de la partie'''
 
 class Plateau:
     # une case est vide (=0) joueur 1 (=1) et joueur 2 (=2)
@@ -27,14 +32,14 @@ class Plateau:
             print("  " * self.taille + "x\y", s)
             for i in range(0, self.taille):
                 print("  " * (self.taille - i - 1), i, self.mat[i])
-        elif(nAffichage == 2):
-            xx = np.linspace(0,self.taille, self.taille)
-            yy = np.linspace(0,self.taille, self.taille)
-            #plt.pcolormesh(xx,yy,self.taille, shading='flat')
-            plt.imshow(self.mat)
-            plt.axis('image')
-            plt.draw()
-            #plt.show()
+        # elif(nAffichage == 2):
+        #     xx = np.linspace(0,self.taille, self.taille)
+        #     yy = np.linspace(0,self.taille, self.taille)
+        #     #plt.pcolormesh(xx,yy,self.taille, shading='flat')
+        #     plt.imshow(self.mat)
+        #     plt.axis('image')
+        #     plt.draw()
+        #     #plt.show()
     
     def chemin(self, joueur, xDepart, yDepart, dejaVu):
         dejaVu.append((xDepart, yDepart))
@@ -82,4 +87,3 @@ class Plateau:
                 if(self.mat[0][i] == joueur) and not(sortie):
                     sortie = self.chemin(joueur, 0, i, [])
         return sortie
-  
