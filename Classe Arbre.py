@@ -1,3 +1,4 @@
+'''Structure d'arbre classique, une racine et une liste d'arbres fils.'''
 class Arbre:
     def __init__(self,racine):
         self.racine = racine
