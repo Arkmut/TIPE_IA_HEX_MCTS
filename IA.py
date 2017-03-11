@@ -104,20 +104,23 @@ def rechercheCoup(arbre, x, y, plateau):
     #quand le joueur joue un coup non présent dans l'arbre, n'est pas sensé arriver
 
 ##MCTS
-
+''' MCTS repose sur quatre étapes :
+    - Sélection: on sélectionne le coup le plus prometteur à partir d'un arbre de notation de coups. 
+        Cette sélection repose sur des notation antérieures des coups.
+    - Expansion: on ajoute à ce coup «père» tout ses coups «fils» dans l'arbre, c'est à dire 
+        les coups possible après le coup sélectionné.
+    - Simulation : pour chacun des coups fils nouvellement rajoutés, on simule une partie aléatoire, 
+        et on note le coup fils avec le résultat de cette partie.
+    - Rétro-propagation (Ici backtracking): On actualise les notations des nœuds parents avec le résultat de cette partie.'''
 #Coeur de l'algorithme
 def mcts(arbre):
     t0 = time.time()
     t1 = t0
     while t1 < t0 + 15:
         p_copy = deepcopy(arbre.racine[0])
-        #SELECTION d'un coup à explorer
         select, chemin, joueur = selection(arbre, p_copy, [], 1)  #/!\ Modifie l'état du plateau p_copy
-        #EXPANSION : on ajoute à l'arbre des coups les coups ultérieurs au coup sélectionné 
         expansion(select, p_copy)
-        #SIMULATION de parties purement aléatoire pour les coups nouvellement rajoutés à l'arbre
         gagnees, jouees = simulation(select, p_copy, joueur, 5) 
-        #RETROPROPAGATION: on actualise les notes des coups antérieurs avec les coups fraîchements notés
         backtracking(arbre, chemin, gagnees, jouees)
         t1 = time.time()
     coupSelect = minimise(arbre.fils)
@@ -137,6 +140,8 @@ def minimise(listeFils): #si l'IA doit jouer
             noteMin = note
             rangMin = k
     return rangMin
+
+# Maximise et minimise sont des fonctions utilisées pour la sélection
 
 def maximise(listeFils): #Si le joueur doit jouer
     noteMax = listeFils[0].racine[1][1] - listeFils[0].racine[1][0]
