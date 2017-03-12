@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 ''' Un plateau de jeu est representé par une matrice, dont les dimensions sont fixées par la "largeur" du plateau. 
 Voici les fonctions dont la classe est constituée:
     -Joue actualise le plateau en rentrant le numéro du joueur aux coordonnées demandées
