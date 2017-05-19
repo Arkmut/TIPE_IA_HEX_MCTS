@@ -1,3 +1,5 @@
+
+# -*- coding: utf-8 -*-
 import random as rd
 import time
 
@@ -6,8 +8,7 @@ Ici sont utilisé la structure de plateau et la structure d'arbre.
 Cette dernière est utilisée afin de représenter l'arbre des coups explorés par MCTS.
 Elle s'agence de la manière suivante:
     - arbre.racine contient une liste de deux éléments, respectivement:
-        - un couple de coordonées [i, j] représentant un coup
-            OU , s'il sagit du sommet global de l'arbre, du plateau
+        - un tuple de coordonées (i, j) représentant un coup. S'il sagit du sommet global de l'arbre, c'est le coup venant d'être joué
         - un couple de notation [x, y] avec:
             - x le nombre de parties gagnées en jouant ce coup
             - y le nombre de fois que ce coup a été exploré
@@ -27,57 +28,46 @@ A la fin de chaque tour de boucle de la fonction mcts, l'arbre des coups doit re
 
 #Crée un arbre de racine plateau et de fils les coups possibles en un coup
 def coupsPossibles(plateau):
-    coups = Arbre(plateau)
+    coups = Arbre(plateau.coup)
     for i in range (plateau.taille):
         for j in range(plateau.taille):
             if (plateau.mat[i][j] == 0):
-                coups.ajout(Arbre([i, j]))
+                coups.ajout(Arbre((i, j)))
     return coups
 
 #Crée un arbre de racine plateau qui représente toutes les séries de nbEtage coups
-def arbreCoups(plateau, nbEtage, joueur):
-    abr = coupsPossibles(plateau)
-    def aux(arbre, n, j):
-        if (n == 0):
-            return arbre
-        else:
-            for k in range(len(arbre.fils)):
-                arbre.fils[k].fils = [Arbre(arbre.fils[i].racine) for i in range(len(arbre.fils)) if i != k]
-                aux(arbre.fils[k], n - 1, 3 - j)
-            return arbre
-    return aux(abr, nbEtage - 1, joueur)
+# def arbreCoups(plateau, nbEtage, joueur):
+#     abr = coupsPossibles(plateau)
+#     def aux(arbre, n, j):
+#         if (n == 0):
+#             return arbre
+#         else:
+#             for k in range(len(arbre.fils)):
+#                 arbre.fils[k].fils = [Arbre(arbre.fils[i].racine) for i in range(len(arbre.fils)) if i != k]
+#                 aux(arbre.fils[k], n - 1, 3 - j)
+#             return arbre
+#     return aux(abr, nbEtage - 1, joueur)
 #joueur n'a pour l'instant pas d'utilité ici
-
-#Effectue une copie en mémoire du plateau
-def deepcopy(plateau):
-    len = plateau.taille
-    plat = Plateau(len)
-    for i in range(len):
-        for j in range(len):
-            plat.mat[i][j] = plateau.mat[i][j]
-    return plat
 
 #Joue une partie aléatoire à partir d'un état du plateau et renvoie le joueur gagnant
 def partieAleat(plateau, joueur):
-    plat = deepcopy(plateau)
+    plat = plateau.deepcopy()
     coups = coupsPossibles(plat).fils
-    coupsJoues = []
+    j = joueur
     while coups != []:
         k = rd.randint(0, len(coups) - 1)
-        coupsJoues.append(coups.pop(k).racine)
-    for k in coupsJoues:
-        plat.joue(joueur, k[0], k[1])
-        joueur = 3 - joueur
+        plat.joue(j, coups.pop(k).racine)
+        j = 3 - j
     if plat.checkVictoire(1):
         return 1
     else:
         return 2
 
-def parcoursProfondeur(arbre):
-    #action sur racine
-    if arbre.fils != []:
-        for elt in arbre.fils:
-            parcoursProfondeur(elt)
+#def parcoursProfondeur(arbre):
+#    #action sur racine
+#    if arbre.fils != []:
+#        for elt in arbre.fils:
+#            parcoursProfondeur(elt)
 
 #Ajoute au noeuds un couple pour la notation
 def transfoArbre(arbre):
@@ -89,15 +79,14 @@ def transfoArbre(arbre):
 def initialisation(plateau):
     arbre = coupsPossibles(plateau)
     transfoArbre(arbre)
-    gagnees, jouees = simulation(arbre, plateau, 1, 5)
+    gagnees, jouees = simulation(arbre, plateau, 1, 1)
     arbre.racine[1][0] = gagnees
     arbre.racine[1][1] = jouees
     return arbre
 
-def rechercheCoup(arbre, x, y, plateau):
+def rechercheCoup(arbre, coup, plateau):
     for elt in arbre.fils:
-        if [x, y] == elt.racine[0]:
-            elt.racine[0] = plateau
+        if coup == elt.racine[0]:
             return elt
     print("fail")
     return initialisation(plateau) 
@@ -113,19 +102,31 @@ def rechercheCoup(arbre, x, y, plateau):
         et on note le coup fils avec le résultat de cette partie.
     - Rétro-propagation (Ici backtracking): On actualise les notations des nœuds parents avec le résultat de cette partie.'''
 #Coeur de l'algorithme
-def mcts(arbre):
+def mcts(arbre, plateau):
     t0 = time.time()
     t1 = t0
-    while t1 < t0 + 15:
-        p_copy = deepcopy(arbre.racine[0])
+    while t1 < t0 + 5:
+        p_copy = plateau.deepcopy()
         select, chemin, joueur = selection(arbre, p_copy, [], 1)  #/!\ Modifie l'état du plateau p_copy
         expansion(select, p_copy)
-        gagnees, jouees = simulation(select, p_copy, joueur, 5) 
+        gagnees, jouees = simulation(select, p_copy, joueur, 1) 
         backtracking(arbre, chemin, gagnees, jouees)
         t1 = time.time()
     coupSelect = minimise(arbre.fils)
     #arbre.affiche()
     return arbre.fils[coupSelect]
+
+def mcts2(arbre, plateau):
+    t0 = time.time()
+    t1 = t0
+    while t1 < t0 + 5:
+        p_copy = plateau.deepcopy()
+        select, chemin, joueur = selection(arbre, p_copy, [], 1)  #/!\ Modifie l'état du plateau p_copy
+        expansion(select, p_copy)
+        gagnees, jouees = simulation(select, p_copy, joueur, 1) 
+        backtracking(arbre, chemin, gagnees, jouees)
+        t1 = time.time()
+    arbre.affiche()
     
 
 def minimise(listeFils): #si l'IA doit jouer
@@ -136,7 +137,7 @@ def minimise(listeFils): #si l'IA doit jouer
         x = listeFils[k].racine[1][0] #nb de parties gagnées par le fils k
         y = listeFils[k].racine[1][1] #nb de partie jouées depuis le fils k
         note = y - x #fonction de notation : nb de parties perdues
-        if note < noteMin: # on essaie de maximiser le nb de parties perdues
+        if note < noteMin: # on essaie de minimiser le nb de parties perdues
             noteMin = note
             rangMin = k
     return rangMin
@@ -151,7 +152,7 @@ def maximise(listeFils): #Si le joueur doit jouer
         x = listeFils[k].racine[1][0] #nb de parties gagnées par le fils k
         y = listeFils[k].racine[1][1] #nb de partie jouées depuis le fils k
         note = y - x #fonction de notation : nb de parties perdues
-        if note > noteMax: # on essaie de minimiser le nb de parties perdues
+        if note > noteMax: # on essaie de maximiser le nb de parties perdues
             noteMax = note
             rangMax = k
     return rangMax
@@ -168,7 +169,7 @@ def selection(arbre, plateau, chemin, joueur):
             coupSelect = maximise(arbre.fils)
         chemin.append(coupSelect) # chemin est une liste d'int. 
         #Chaque int indique une place de la liste arbre.fils et donc le coup suivant
-        plateau.joue(joueur, arbre.fils[coupSelect].racine[0][0], arbre.fils[coupSelect].racine[0][1])
+        plateau.joue(joueur, arbre.fils[coupSelect].racine[0])
         return selection(arbre.fils[coupSelect], plateau, chemin, 3 - joueur)
 
 def expansion(arbre, plateau):
@@ -179,8 +180,9 @@ def expansion(arbre, plateau):
 def simulation(arbre, plateau, joueur, n): #n le nb de parties simulées par fils créé
     gagnees = 0
     jouees = 0
+    coupOrigin = plateau.coup
     for fils in arbre.fils:
-        plateau.joue(joueur, fils.racine[0][0], fils.racine[0][1])
+        plateau.joue(joueur, fils.racine[0])
         for _ in range(n):
             x = partieAleat(plateau, 3 - joueur) # x = 1 ou 2 selon qui gagne
             fils.racine[1][1] += 1 #on rajoute une visite au fils  
@@ -189,6 +191,7 @@ def simulation(arbre, plateau, joueur, n): #n le nb de parties simulées par fil
                 fils.racine[1][0] += 1 #on rajoute une victoire
                 gagnees += 1  
         plateau.mat[fils.racine[0][0]][fils.racine[0][1]] = 0
+    plateau.coup = coupOrigin
     return gagnees, jouees
 
 def backtracking(arbre, chemin, gagnees, jouees):
@@ -203,3 +206,72 @@ def backtracking(arbre, chemin, gagnees, jouees):
         arbre.racine[1][0] += ajout_gain
         arbre.racine[1][1] += ajout_jouees
         return ajout_gain, ajout_jouees
+
+def reaction(plateau, joueur):
+    j = joueur
+    (x, y) = plateau.coup
+    if (x, y) == (-1, -1):
+        return (x, y)
+    leng = plateau.taille
+    vois = [-1] * 6
+    if  x > 0:
+        if x < leng - 1:
+            if y > 0:
+                if y < leng - 1:
+                    vois[0] = plateau.mat[x-1][y-1]
+                    vois[1] = plateau.mat[x-1][y]
+                    vois[2] = plateau.mat[x][y+1]
+                    vois[3] = plateau.mat[x+1][y+1]
+                    vois[4] = plateau.mat[x+1][y]
+                    vois[5] = plateau.mat[x][y-1]
+                else:
+                    vois[0] = plateau.mat[x-1][y-1]
+                    vois[1] = plateau.mat[x-1][y]
+                    vois[4] = plateau.mat[x+1][y]
+                    vois[5] = plateau.mat[x][y-1]
+            else:
+                vois[1] = plateau.mat[x-1][y]
+                vois[2] = plateau.mat[x][y+1]
+                vois[3] = plateau.mat[x+1][y+1]
+                vois[4] = plateau.mat[x+1][y]
+        else:
+            if y > 0:
+                if y < leng - 1:
+                    vois[0] = plateau.mat[x-1][y-1]
+                    vois[1] = plateau.mat[x-1][y]
+                    vois[2] = plateau.mat[x][y+1]
+                    vois[5] = plateau.mat[x][y-1]
+                else:
+                    vois[0] = plateau.mat[x-1][y-1]
+                    vois[1] = plateau.mat[x-1][y]
+                    vois[5] = plateau.mat[x][y-1]
+            else:
+                vois[1] = plateau.mat[x-1][y]
+                vois[2] = plateau.mat[x][y+1]
+    else:
+        if y > 0:
+            if y < leng - 1:
+                vois[2] = plateau.mat[x][y+1]
+                vois[3] = plateau.mat[x+1][y+1]
+                vois[4] = plateau.mat[x+1][y]
+                vois[5] = plateau.mat[x][y-1]
+            else:
+                vois[4] = plateau.mat[x+1][y]
+                vois[5] = plateau.mat[x][y-1]
+        else:
+            vois[2] = plateau.mat[x][y+1]
+            vois[3] = plateau.mat[x+1][y+1]
+            vois[4] = plateau.mat[x+1][y]
+    if vois[4] == 0 and vois[5] == j and vois[3] == j:
+        return (x+1, y)
+    if vois[1] == 0 and vois[0] == j and vois[2] == j:
+        return (x-1, y)
+    if vois[3] == 0 and vois[4] == j and vois[2] == j:
+        return (x+1, y+1)
+    if vois[0] == 0 and vois[5] == j and vois[1] == j:
+        return (x-1, y-1)
+    if vois[5] == 0 and vois[0] == j and vois[4] == j:
+        return (x, y-1)
+    if vois[2] == 0 and vois[1] == j and vois[3] == j:
+        return (x, y+1)
+    return(x, y)
