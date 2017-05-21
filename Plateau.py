@@ -1,4 +1,3 @@
-
 import pygame
 # -*- coding: utf-8 -*-
 ''' Un plateau de jeu est representé par une matrice, dont les dimensions sont fixées par la "largeur" du plateau. 
@@ -13,7 +12,8 @@ class Plateau:
     mat = []
     taille = 0
     coup = (-1,-1)
-
+    fenetre=0
+    fond=0
     def __init__(self, largeur, matrice, coup):
         self.taille = largeur
         self.coup = coup
@@ -42,21 +42,22 @@ class Plateau:
         print("  " * self.taille + "x\y", s)
         for i in range(0, self.taille):
             print("  " * (self.taille - i - 1), i, self.mat[i])
-
+   
     def affiche2(self):
+        print("affiche2")
         pygame.init()
-        fenetre= pygame.display.set_mode((900,510))
-        fond = pygame.image.load("plateau.png")
-        fenetre.blit(fond,(0,0))
+        self.fenetre= pygame.display.set_mode((900,510))
+        self.fond = pygame.image.load("plateau.png")
+        self.fenetre.blit(self.fond,(0,0))
         leng = self.taille
         for i in range(leng):
             for j in range(leng):
                 x = int(295 + 51.1 * i - 25.5 * j)
                 y = int(3 + 44.3 * j)
                 if self.mat[i][j] == 1:
-                    fenetre.blit(pygame.image.load("rouge.png"),(x, y))
+                    self.fenetre.blit(pygame.image.load("rouge.png"),(x, y))
                 if self.mat[i][j] == 2:
-                    fenetre.blit(pygame.image.load("bleu.png"),(x, y))
+                    self.fenetre.blit(pygame.image.load("bleu.png"),(x, y))
         pygame.display.flip()
 
     #Effectue une copie en mémoire du plateau
@@ -104,19 +105,3 @@ class Plateau:
                 if(self.mat[0][i] == joueur) and not(sortie):
                     sortie = self.chemin(joueur, 0, i, [])
         return sortie
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
