@@ -16,3 +16,8 @@ class Arbre:
             print("   " * nEtage, self.racine)
             for elt in self.fils:
                 elt.affiche(nEtage + 1)
+     def transfoArbre(self):
+        self.racine = [self.racine, [0, 0]]
+        if self.fils != []:
+            for elt in self.fils:
+                transfoArbre(elt)
