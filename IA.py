@@ -96,10 +96,11 @@ def initialisation(plateau):
     arbre.racine[1][1] = jouees
     return arbre
 
-def rechercheCoup(arbre, plateau):
-    for elt in arbre.fils:
-        if plateau.coup == elt.racine[0]:
-            return elt
+def rechercheCoup(arbre, plateau, cheminGeneral):
+    for k in range(len(arbre.fils)):
+        if plateau.coup == arbre.fils[k].racine[0]:
+            cheminGeneral.append(k)
+            return arbre.fils[k]
     print("fail")
     arbre.ajout(initialisation(plateau))
     leng = len(arbre.fils)
@@ -123,7 +124,7 @@ def mcts(arbreGeneral, cheminGeneral, arbre, plateau):
         p_copy = plateau.deepcopy()
         select, chemin, joueur = selection(arbre, p_copy, [], 1)  #/!\ Modifie l'état du plateau p_copy
         expansion(select, p_copy, joueur)
-        gagnees, jouees = simulation(select, p_copy, joueur, 1) 
+        gagnees, jouees = simulation(select, p_copy, joueur, 1)
         backtracking(arbreGeneral, cheminGeneral + chemin, gagnees, jouees)
         t1 = time.time()
     coupSelect = minimise(arbre.fils)

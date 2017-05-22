@@ -37,7 +37,7 @@ while(pasDeGagnant):
         caseOccupee = not(plateau.joue(joueur, (x, y)))
     pasDeGagnant = not(plateau.checkVictoire(joueur))
     if joueur == 2: #On actualise l'arbre de recherche de l'IA avec le coup de l'adversaire
-        arbreCoups = rechercheCoup(arbreCoups, plateau)
+        arbreCoups = rechercheCoup(arbreCoups, plateau, cheminGeneral)
     if(pasDeGagnant):
         joueur = 3 - joueur
     plateau.affiche2()
