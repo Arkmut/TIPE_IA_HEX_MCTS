@@ -101,7 +101,9 @@ def rechercheCoup(arbre, plateau):
         if plateau.coup == elt.racine[0]:
             return elt
     print("fail")
-    return initialisation(plateau) 
+    arbre.ajout(initialisation(plateau))
+    leng = len(arbre.fils)
+    return arbre.fils[leng-1]
     #quand le joueur joue un coup non présent dans l'arbre, n'est pas sensé arriver
 
 ##MCTS
@@ -114,7 +116,7 @@ def rechercheCoup(arbre, plateau):
         et on note le coup fils avec le résultat de cette partie.
     - Rétro-propagation (Ici backtracking): On actualise les notations des nœuds parents avec le résultat de cette partie.'''
 #Coeur de l'algorithme
-def mcts(arbre, plateau):
+def mcts(arbreGeneral, cheminGeneral, arbre, plateau):
     t0 = time.time()
     t1 = t0
     while t1 < t0 + 10:
@@ -122,9 +124,10 @@ def mcts(arbre, plateau):
         select, chemin, joueur = selection(arbre, p_copy, [], 1)  #/!\ Modifie l'état du plateau p_copy
         expansion(select, p_copy, joueur)
         gagnees, jouees = simulation(select, p_copy, joueur, 1) 
-        backtracking(arbre, chemin, gagnees, jouees)
+        backtracking(arbreGeneral, cheminGeneral + chemin, gagnees, jouees)
         t1 = time.time()
     coupSelect = minimise(arbre.fils)
+    cheminGeneral.append(coupSelect)
     #arbre.affiche()
     return arbre.fils[coupSelect]
     
@@ -270,6 +273,18 @@ def reaction(plateau, joueur):
             vois[2] = plateau.mat[x][y+1]
             vois[3] = plateau.mat[x+1][y+1]
             vois[4] = plateau.mat[x+1][y]
+    if j == 1 and y == 0:
+        if vois[2] == j and vois[1] == 0: return (x-1, y)
+        if vois[3] == j and vois[4] == 0: return (x+1, y)
+    if j == 1 and y == leng-1:
+        if vois[0] == j and vois[1] == 0: return (x-1, y)
+        if vois[5] == j and vois[4] == 0: return (x+1, y)
+    if j == 2 and x == 0:
+        if vois[4] == j and vois[5] == 0: return (x, y-1)
+        if vois[3] == j and vois[2] == 0: return (x, y+1)
+    if j == 2 and x == leng-1:
+        if vois[0] == j and vois[5] == 0: return (x, y-1)
+        if vois[1] == j and vois[2] == 0: return (x, y+1) 
     if vois[4] == 0 and vois[5] == j and vois[3] == j:
         return (x+1, y)
     if vois[1] == 0 and vois[0] == j and vois[2] == j:

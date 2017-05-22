@@ -3,7 +3,9 @@ import pygame
 plateau = Plateau(9, [], (-1,-1))
 joueur = 1
 pasDeGagnant = True
-arbreCoups = initialisation(plateau)
+arbreGeneral = initialisation(plateau)
+arbreCoups = arbreGeneral
+cheminGeneral = []
 
 # while(pasDeGagnant):
 #     marchePas = True
@@ -26,7 +28,7 @@ while(pasDeGagnant):
     caseOccupee = True
     while(caseOccupee):
         if joueur == 1:
-            arbreCoups = mcts(arbreCoups, plateau)
+            arbreCoups = mcts(arbreGeneral, cheminGeneral, arbreCoups, plateau)
             x = arbreCoups.racine[0][0]
             y = arbreCoups.racine[0][1]
         elif joueur == 2:
