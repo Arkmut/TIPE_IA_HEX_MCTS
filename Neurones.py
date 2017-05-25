@@ -1,33 +1,25 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from math import exp
-import time
-def getData(pred,data):
-    data=pred.evalue(data)
-    return data
+
 class Neurone:
     
-    parents = np.array([])
+    predecesseur = np.array([])
     poids = np.array([])
     biais = 0
-    sigmoideVect=lambda x:x
-    evalVect= lambda x:x
-    def __init__(self, listeParents, listePoids, biais):
-        self.parents = listeParents
+ 
+    def __init__(self, listePredecesseur, listePoids, biais):
+        self.predecesseur = listePredecesseur
         self.poids = listePoids
         self.biais = biais   
-        self.sigmoideVect=np.vectorize(lambda x: 1 / (1 + exp(- x - self.biais)))
-        self.evalVect=np.vectorize(getData)
-    def evalue(self, data):       
-        #entree = self.evalVect(self.parents,data)
-        entree=[]
-        for i in  range (0,len(self.parents)):
-            if(i==0):
-                entree=self.parents[i].evalue(data)
-            else:
-                entree=np.vstack((entree,self.parents[i].evalue(data)))
-        sortie = np.dot(self.poids,entree )
-        sortie = self.sigmoideVect(sortie)
+
+    def evalue(self, data):
+        entree = [self.predecesseur[0].evalue(data)]
+        for k in range(1, len(self.predecesseur)):
+            np.concatenate((entree, [self.predecesseur[k].evalue(data)]))
+        sortie = np.dot(self.poids, entree)
+        s = np.vectorize(lambda x: 1 / (1 + exp(- x - self.biais)))
+        sortie = s(sortie)
         return sortie
 
 class NeuroneAlpha:
@@ -44,9 +36,6 @@ class NeuroneAlpha:
         s = np.vectorize(lambda x: 1 / (1 + exp(- x - self.biais)))
         sortie = s(sortie)
         return sortie
-
-
-
 
 tmps1=time.clock()
 tailleI=81
