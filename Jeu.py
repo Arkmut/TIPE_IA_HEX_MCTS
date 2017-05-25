@@ -3,7 +3,9 @@ import pygame
 plateau = Plateau(9, [], (-1,-1))
 joueur = 1
 pasDeGagnant = True
-arbreCoups = initialisation(plateau)
+arbreGeneral = initialisation(plateau)
+arbreCoups = arbreGeneral
+cheminGeneral = []
 
 # while(pasDeGagnant):
 #     marchePas = True
@@ -26,24 +28,16 @@ while(pasDeGagnant):
     caseOccupee = True
     while(caseOccupee):
         if joueur == 1:
-            coup = reaction(plateau, 1)
-            if plateau.coup != coup:
-                print("reaction")
-                arbreCoups = rechercheCoup(arbreCoups, coup, plateau)
-                mcts2(arbreCoups,plateau)
-                (x, y) = coup
-            else:
-                arbreCoups = mcts(arbreCoups, plateau)
-                x = arbreCoups.racine[0][0]
-                y = arbreCoups.racine[0][1]
-            arbreCoups.racine[0] = plateau
+            arbreCoups = mcts(arbreGeneral, cheminGeneral, arbreCoups, plateau)
+            x = arbreCoups.racine[0][0]
+            y = arbreCoups.racine[0][1]
         elif joueur == 2:
             x = int(input("Xjoueur2 = "))
             y = int(input("Yjoueur2 = "))
         caseOccupee = not(plateau.joue(joueur, (x, y)))
     pasDeGagnant = not(plateau.checkVictoire(joueur))
     if joueur == 2: #On actualise l'arbre de recherche de l'IA avec le coup de l'adversaire
-        arbreCoups = rechercheCoup(arbreCoups, coup, plateau)
+        arbreCoups = rechercheCoup(arbreCoups, plateau, cheminGeneral)
     if(pasDeGagnant):
         joueur = 3 - joueur
     plateau.affiche2()

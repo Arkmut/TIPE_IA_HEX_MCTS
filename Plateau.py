@@ -1,4 +1,3 @@
-
 import pygame
 # -*- coding: utf-8 -*-
 ''' Un plateau de jeu est representé par une matrice, dont les dimensions sont fixées par la "largeur" du plateau. 
@@ -104,19 +103,3 @@ class Plateau:
                 if(self.mat[0][i] == joueur) and not(sortie):
                     sortie = self.chemin(joueur, 0, i, [])
         return sortie
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
