@@ -28,6 +28,7 @@ class NeuroneAlpha:
     
     poids = np.array([])
     biais = 0
+    sigmoide = lambda x: x
  
     def __init__(self, listePoids, biais):
         self.poids = listePoids
