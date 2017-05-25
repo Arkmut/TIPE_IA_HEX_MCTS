@@ -17,9 +17,9 @@ class Neurone:
         self.sigmoide = np.vectorize(lambda x: 1 / (1 + exp(- x - self.biais)))
 
     def evalue(self, data):
-        entree = [self.predecesseur[0].evalue(data)]
+        entree =np.array([self.predecesseur[0].evalue(data)])
         for k in range(1, len(self.predecesseur)):
-            np.concatenate((entree, [self.predecesseur[k].evalue(data)]))
+            entree=np.concatenate((entree, np.array([self.predecesseur[k].evalue(data)])))
         sortie = np.dot(self.poids, entree)
         sortie = self.sigmoide(sortie)
         return sortie
