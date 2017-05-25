@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import random as rd
 import time
-
+from ClasseArbre import *
 '''
 Ici sont utilisé la structure de plateau et la structure d'arbre.
 Cette dernière est utilisée afin de représenter l'arbre des coups explorés par MCTS.
@@ -132,6 +132,28 @@ def mcts(arbreGeneral, cheminGeneral, arbre, plateau):
     #arbre.affiche()
     return arbre.fils[coupSelect]
     
+def mctsThread(arbreGeneral, cheminGeneral, arbre, plateau,yourTurn):
+    if(yourTurn):
+        t0 = time.time()
+        t1 = t0
+        while t1 < t0 + 10:
+            p_copy = plateau.deepcopy()
+            select, chemin, joueur = selection(arbre, p_copy, [], 1)  #/!\ Modifie l'état du plateau p_copy
+            expansion(select, p_copy, joueur)
+            gagnees, jouees = simulation(select, p_copy, joueur, 1)
+            backtracking(arbreGeneral, cheminGeneral + chemin, gagnees, jouees)
+            t1 = time.time()
+        coupSelect = minimise(arbre.fils)
+        cheminGeneral.append(coupSelect)
+        #arbre.affiche()
+        return arbre,coupSelect
+    else:
+        p_copy = plateau.deepcopy()
+        select, chemin, joueur = selection(arbre, p_copy, [], 1)  #/!\ Modifie l'état du plateau p_copy
+        expansion(select, p_copy, joueur)
+        gagnees, jouees = simulation(select, p_copy, joueur, 1)
+        backtracking(arbreGeneral, cheminGeneral + chemin, gagnees, jouees)
+        return arbre
 # Maximise et minimise sont des fonctions utilisées pour la sélection
 
 def minimise(listeFils): #si l'IA doit jouer
