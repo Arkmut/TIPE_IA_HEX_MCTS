@@ -67,8 +67,9 @@ class ThreadIA(Thread):
                 #print("apres",arbreCoups.nbTot(0))
                 print("fin joueur",joueur)
             else:
-                while joueur==2 and not(updateArbre):
-                    arbreCoups=mctsThread(arbreCoups, plateau,False)
+                while joueur==2 :
+                    if(not(updateArbre)):
+                        arbreCoups=mctsThread(arbreCoups, plateau,False)
 
 
 
