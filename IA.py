@@ -214,6 +214,7 @@ def backtracking(arbre, chemin, gagnees, jouees):
         arbre.racine[1][1] = jouees
         return ajout_gain, ajout_jouees
     else:
+        print(len(arbre.fils), chemin)
         ajout_gain, ajout_jouees = backtracking(arbre.fils[chemin[0]], chemin[1:], gagnees, jouees)
         arbre.racine[1][0] += ajout_gain
         arbre.racine[1][1] += ajout_jouees
