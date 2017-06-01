@@ -1,7 +1,7 @@
 neurone A
 
 
-//entrees (plateau en 2*2)				// sorties: vecteur de probas associé au vecteur de tout les coups possibles
+//entrees (plateau en 2*2)				// sorties: vecteur de probas associÃ© au vecteur de tout les coups possibles
 p11 p12 p21 p22 			==> 		[0.1 0.5 0.9 0.1]
 		      					  y1  y2  y3  y4
 
@@ -10,11 +10,34 @@ p11 p12 p21 p22 			==> 		[0.1 0.5 0.9 0.1]
 
 
 //poids du neurone (matrice en 4*4)
-a a' a'' a°
-b b' b'' b°
-c c' c'' c°
-d d' d'' d°
+a a' a'' aÂ°
+b b' b'' bÂ°
+c c' c'' cÂ°
+d d' d'' dÂ°
 
-//fonction de transformation du neurone (s=sigmoide pour la non linéarité)
+//fonction de transformation du neurone (s=sigmoide pour la non linÃ©aritÃ©)
 y1= s(a*p11+b*p12+c*p21+d*p22)
+idem pour les autres y
+
+
+neurone B
+
+
+//entrees (liste de probas de coups)			// sorties: idem
+[0.1 0.5 0.9 0.1]			==> 		[0.1 0.5 0.9 0.1]
+ x1   x2  x3  x4		      			  y1  y2  y3  y4
+
+
+
+
+
+
+//poids du neurone (matrice en 4*4)
+a a' a'' aÂ°
+b b' b'' bÂ°
+c c' c'' cÂ°
+d d' d'' dÂ°
+
+//fonction de transformation du neurone (s=sigmoide pour la non linÃ©aritÃ©)
+y1= s(a*x1+b*x2+c*x3+d*x4)
 idem pour les autres y

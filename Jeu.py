@@ -1,41 +1,24 @@
 # -*- coding: utf-8 -*-
-import pygame 
-import time
-from Plateau import *
+import pygame
 from IA import *
-from ClasseArbre import *
-
+from plateau import *
+from classeArbre import *
 from threading import Thread
 
 plateau = Plateau(9, [], (-1,-1))
 joueur = 1
 pasDeGagnant = True
-arbreCoups = initialisation(plateau)
+arbreGeneral = initialisation(plateau)
+arbreCoups = arbreGeneral
+cheminGeneral = []
+
+
 isThinking=True
 canThink=True
 updateArbre=False
+canBeginUpdate=False
 x=0
 y=0
-testValue=-1
-
-
-class ThreadPygame(Thread):
-    def __init__(self):
-        global plateau
-        ''' Constructor. '''
-        Thread.__init__(self)
-        print("affichage init")
-    
-    def run(self):
-        global plateau
-        global pasDeGagnant
-        while pasDeGagnant:
-            plateau.affiche2()
-            time.sleep(0.1)
-
-
-
-
 
 
 
@@ -52,44 +35,39 @@ class ThreadIA(Thread):
         global x
         global y
         global arbreCoups
+        global arbreGeneral
+        global cheminGeneral
         global updateArbre
-        global testValue
+        global canBeginUpdate
         while pasDeGagnant :
             if(joueur==1 and canThink):
                 print("joueur",joueur)
                 #print("avant",arbreCoups.nbTot(0))
                 isThinking=True
-                arbreCoups,coupSelect = mctsThread(arbreCoups, plateau,True)
-                x = arbreCoups.fils[coupSelect].racine[0][0]
-                y = arbreCoups.fils[coupSelect].racine[0][1]
+                print(cheminGeneral)
+                print("arbre en debut de thread",arbreCoups)
+                print("arbre général en debut de thread",arbreGeneral)
+                arbreCoups = mctsThread(arbreGeneral, cheminGeneral,arbreCoups, plateau,True)
+                x = arbreCoups.racine[0][0]
+                y = arbreCoups.racine[0][1]
                 isThinking=False
                 canThink=False
                 #print("apres",arbreCoups.nbTot(0))
                 print("fin joueur",joueur)
             else:
+                print("debut joueur 2")
+                #print(cheminGeneral)
                 while joueur==2 :
                     if(not(updateArbre)):
-                        arbreCoups=mctsThread(arbreCoups, plateau,False)
+                        canBeginUpdate=False
+                        arbreCoups=mctsThread(arbreGeneral, cheminGeneral,arbreCoups, plateau,False)
+                    else:
+                        canBeginUpdate=True
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-thread= ThreadIA()
-thread.start()
-threadPlateau=ThreadPygame()
-#threadPlateau.start()
 # while(pasDeGagnant):
 #     marchePas = True
 #     while(marchePas):
@@ -104,7 +82,8 @@ threadPlateau=ThreadPygame()
 #     if(pasDeGagnant):
 #         joueur = 3 - joueur
 #     plateau.affiche(1)
-
+thread= ThreadIA()
+thread.start()
 '''On laisse pour l'instant l'IA jouer en premier. Elle execute l'algorithme MCTS et joue le coup dans la racine de l'arbre renvoyé. 
 On insere ensuite le plateau à la place de cette racine, pour de futures simulations'''
 while(pasDeGagnant):
@@ -112,11 +91,12 @@ while(pasDeGagnant):
     while(caseOccupee):
         if joueur == 1:
             canThink=True
-            #arbreCoups = mcts(arbreCoups, plateau)
+            #arbreCoups = mcts(arbreGeneral, cheminGeneral, arbreCoups, plateau)
             #x = arbreCoups.racine[0][0]
             #y = arbreCoups.racine[0][1]
             while isThinking:
                 1
+        
         elif joueur == 2:
             x = int(input("Xjoueur2 = "))
             y = int(input("Yjoueur2 = "))
@@ -124,19 +104,15 @@ while(pasDeGagnant):
     pasDeGagnant = not(plateau.checkVictoire(joueur))
     if joueur == 2: #On actualise l'arbre de recherche de l'IA avec le coup de l'adversaire
         updateArbre=True
-        arbreCoups = rechercheCoup(arbreCoups, plateau)
+        while not(canBeginUpdate):
+            1
+        arbreCoups = rechercheCoup(arbreCoups, plateau, cheminGeneral)
+        print("arbre apres rechercheCoup",arbreCoups)
         updateArbre=False
     if(pasDeGagnant):
         joueur = 3 - joueur
+
     plateau.affiche2()
 
 pygame.quit()  
 print("joueur n°" + str(joueur) + " gagne")
-
-
-
-
-
-
-               
-           

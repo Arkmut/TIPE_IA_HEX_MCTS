@@ -15,11 +15,3 @@ class Arbre:
             print("   " * nEtage, self.racine)
             for elt in self.fils:
                 elt.affiche(nEtage + 1)
-    def nbTot(self,compteur):
-        compteur+=1
-        if(len(self.fils)==0):
-            return compteur
-        else:
-            for elt in self.fils:
-                compteur+=elt.nbTot(compteur)
-            return compteur

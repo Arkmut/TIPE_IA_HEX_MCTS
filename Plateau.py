@@ -12,8 +12,7 @@ class Plateau:
     mat = []
     taille = 0
     coup = (-1,-1)
-    fenetre=0
-    fond=0
+
     def __init__(self, largeur, matrice, coup):
         self.taille = largeur
         self.coup = coup
@@ -42,22 +41,21 @@ class Plateau:
         print("  " * self.taille + "x\y", s)
         for i in range(0, self.taille):
             print("  " * (self.taille - i - 1), i, self.mat[i])
-   
+
     def affiche2(self):
-        print("affiche2")
         pygame.init()
-        self.fenetre= pygame.display.set_mode((900,510))
-        self.fond = pygame.image.load("plateau.png")
-        self.fenetre.blit(self.fond,(0,0))
+        fenetre= pygame.display.set_mode((900,510))
+        fond = pygame.image.load("plateau.png")
+        fenetre.blit(fond,(0,0))
         leng = self.taille
         for i in range(leng):
             for j in range(leng):
                 x = int(295 + 51.1 * i - 25.5 * j)
                 y = int(3 + 44.3 * j)
                 if self.mat[i][j] == 1:
-                    self.fenetre.blit(pygame.image.load("rouge.png"),(x, y))
+                    fenetre.blit(pygame.image.load("rouge.png"),(x, y))
                 if self.mat[i][j] == 2:
-                    self.fenetre.blit(pygame.image.load("bleu.png"),(x, y))
+                    fenetre.blit(pygame.image.load("bleu.png"),(x, y))
         pygame.display.flip()
 
     #Effectue une copie en mémoire du plateau
@@ -65,6 +63,14 @@ class Plateau:
         newMat = [ligne[:] for ligne in self.mat]
         plat = Plateau(self.taille, newMat, self.coup)
         return plat
+    
+#    def coupsPossibles(self):
+#        let coups = []
+#        for i in range (self.taille):
+#            for j in range(self.taille):
+#                if (self.mat[i][j] == 0):
+#                    coups.append((i, j))
+#        return coups
     
     def chemin(self, joueur, xDepart, yDepart, dejaVu):
         dejaVu.append((xDepart, yDepart))
