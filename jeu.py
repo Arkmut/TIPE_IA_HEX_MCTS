@@ -10,6 +10,9 @@ pasDeGagnant = True
 arbreGeneral = initialisation(plateau)
 arbreCoups = arbreGeneral
 cheminGeneral = []
+arbreGeneral2 = initialisation(plateau)
+arbreCoups2 = arbreGeneral2
+cheminGeneral2 = []
 
 # while(pasDeGagnant):
 #     marchePas = True
@@ -36,12 +39,15 @@ while(pasDeGagnant):
             x = arbreCoups.racine[0][0]
             y = arbreCoups.racine[0][1]
         elif joueur == 2:
-            x = int(input("Xjoueur2 = "))
-            y = int(input("Yjoueur2 = "))
+            arbreCoups2 = mcts(arbreGeneral2, cheminGeneral2, arbreCoups2, plateau)
+            x = arbreCoups2.racine[0][0]
+            y = arbreCoups2.racine[0][1]
         caseOccupee = not(plateau.joue(joueur, (x, y)))
     pasDeGagnant = not(plateau.checkVictoire(joueur))
     if joueur == 2: #On actualise l'arbre de recherche de l'IA avec le coup de l'adversaire
         arbreCoups = rechercheCoup(arbreCoups, plateau, cheminGeneral)
+        arbreCoups2 = rechercheCoup(arbreCoups2, plateau, cheminGeneral2)
+
     if(pasDeGagnant):
         joueur = 3 - joueur
     plateau.affiche2()

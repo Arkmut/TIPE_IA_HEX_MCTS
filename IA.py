@@ -128,8 +128,10 @@ def minimise(arbre): #si le joueur doit jouer
     return rangMin
 
 def maximise(arbre): #Si l'IA doit jouer
-    x = arbre.racine[1][1]
+    x = arbre.racine[1][1]+1
     #print("max", x)
+    print("x",x)
+    print(2*log(x)/arbre.fils[0].racine[1][1])
     noteMax = (arbre.fils[0].racine[1][0]/arbre.fils[0].racine[1][1]) + 0.3*sqrt(2*log(x)/arbre.fils[0].racine[1][1])
     rangMax = 0
     leng = len(arbre.fils) #nombre de fils
