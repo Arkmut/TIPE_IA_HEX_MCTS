@@ -1,0 +1,70 @@
+# -*- coding: utf-8 -*-
+import random as rd
+import numpy as np
+import Classes_neurones 
+import sympy as sp
+
+def faire_reseau(liste_couches,nb_data):
+#    n = len(liste_couches)
+
+    reseau = []
+    precouche = []
+    for k in range(liste_couches[0]):
+        listpoids = np.random.rand(1,nb_data)
+        precouche.append(NeuroneAlpha(listpoids,rd.randint(0,1)))
+    reseau.append(precouche)
+    for k in range(1,len(liste_couches)):
+        couche = []
+        precouche = reseau[k-1]
+        for i in range(liste_couches[k]):
+            listpoids = np.random.rand(1,len(precouche))
+            couche.append(Neurone(precouche,listpoids,rd.randint(0,1)))
+        reseau.append(couche)
+    return reseau
+
+def evaluer_reseau(reseau, data): 
+    return 10
+
+
+#prend la matrice d'un plateau en entrée, et la convertie en vecteur ligne  
+#Remarque importante : reshape n'est pas une procédure, et ne modifie pas l'array passé en parametre
+def platarray(platmat):
+    mat = np.array(platmat)
+    print(mat,type(mat))
+    n = len(platmat)
+    m = len(platmat[0])
+    print(n,m)
+    mat2 = np.reshape(mat,n*m)
+    return mat2
+def platlist(mat):
+    l = []
+    for k in range(len(mat)-1):
+        for i in range(len(mat[k])-1):
+            l.append(mat[k][i])
+    return l
+
+
+
+#test = faire_reseau([2,5,10],2)
+"""Ici, le probleme est de pouvoir selectionner des poids aléatoirement et de les modifier. Il faut ainsi garder en mémoire les 
+neurones auquels ils appartiennent. On utilise le fait que les liste des poids sont des pointeurs."""     
+def sgd(nbTours,nbechant,reseau,const,cout):
+#    print('avant',reseau[0][0].poids())
+    for k in range(nbTours):
+        selectNeur = platlist(reseau)
+        rd.shuffle(selectNeur)
+        n1 = len(selectNeur)
+        matpoids = [selectNeur[k].poids() for k in range(len(selectNeur)-1)]
+        n2 = len(matpoids)
+        poidselect = [(rd.randint(0,n1-1),rd.randint(0,len(matpoids)-1)) for _ in range(n2 - 1)]#couple de coordonnées aléatoires
+        for k in range(n2 -1):
+            x,y = poidselect[k]
+            matpoids[x][y] = matpoids[x][y] - (const/nbechant)*dp(cout,matpoids[x][y])
+            
+
+
+#        print('apres',reseau[0][0].poids())
+        
+#calcul de la dérivée partielle     
+def dp(fonction, variable):
+    return 1
