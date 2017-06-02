@@ -99,14 +99,20 @@ def rechercheCoup(arbre, plateau, cheminGeneral):
 def mcts(arbreGeneral, cheminGeneral, arbre, plateau):
     t0 = time.time()
     t1 = t0
-    while t1 < t0 + 10:
+    while t1 < t0 + 30:
         p_copy = plateau.deepcopy()
         select, chemin, joueur = selexpansion(arbre, p_copy, [], 1) #/!\ Modifie l'état du plateau p_copy
         simulation(select, p_copy, joueur, 1)
         backtracking(arbreGeneral, cheminGeneral + chemin)
         t1 = time.time()
-    coupSelect = minimise(arbre)
+    coupSelect = maximise(arbre)
     cheminGeneral.append(coupSelect)
+    print(arbre.racine)
+    for elt in arbre.fils:
+        print("   ", elt.racine)
+    print (arbre.fils[coupSelect].racine)
+    for elt in arbre.fils[coupSelect].fils:
+        print("   ", elt.racine)
     #arbreGeneral.affiche()
     return arbre.fils[coupSelect]
     
@@ -160,6 +166,7 @@ def selexpansion(arbre, plateau, chemin, joueur):
         k = rd.randint(0, len(arbre.fils) - 1)
         chemin.append(k)
         plateau.joue(joueur, arbre.fils[k].racine[0])
+        #print("down", arbre.fils[k].racine[0], chemin[-1])
         return arbre.fils[k], chemin, (3 - joueur)
     else:
         coupsNonNotes = []
@@ -167,8 +174,9 @@ def selexpansion(arbre, plateau, chemin, joueur):
             if arbre.fils[k].racine[1][1] == 0: coupsNonNotes.append(k) 
         if coupsNonNotes != []:
             k = rd.randint(0, len(coupsNonNotes) - 1)
-            chemin.append(k)
+            chemin.append(coupsNonNotes[k])
             plateau.joue(joueur, arbre.fils[coupsNonNotes[k]].racine[0])
+            #print("down", arbre.fils[coupsNonNotes[k]].racine[0], chemin[-1])
             return arbre.fils[coupsNonNotes[k]], chemin, (3 - joueur)
         else:
             #L'IA essaie de jouer les meilleurs coups pour elle, et le joueur les plus mauvais coups pour l'IA
@@ -179,6 +187,7 @@ def selexpansion(arbre, plateau, chemin, joueur):
             chemin.append(coupSelect) # chemin est une liste d'int. 
             #Chaque int indique une place de la liste arbre.fils et donc le coup suivant
             plateau.joue(joueur, arbre.fils[coupSelect].racine[0])
+            #print("down", arbre.fils[coupSelect].racine[0], chemin[-1])
             return selexpansion(arbre.fils[coupSelect], plateau, chemin, 3 - joueur) 
         
         
@@ -196,6 +205,7 @@ def backtracking(arbre, chemin):
         ajout_jouees = arbre.racine[1][1]
         return ajout_gain, ajout_jouees
     else:
+        #print("up", arbre.fils[chemin[0]].racine[0], chemin[0])
         ajout_gain, ajout_jouees = backtracking(arbre.fils[chemin[0]], chemin[1:])
         arbre.racine[1][0] += ajout_gain
         arbre.racine[1][1] += ajout_jouees
