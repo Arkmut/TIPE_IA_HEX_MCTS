@@ -6,23 +6,24 @@ import sympy as sp
 
 def faire_reseau(liste_couches,nb_data):
 #    n = len(liste_couches)
+
     reseau = []
     precouche = []
     for k in range(liste_couches[0]):
-        listpoids = np.random.rand(nb_data)
+        listpoids = np.random.rand(nb_data,nb_data)
         precouche.append(NeuroneAlpha(listpoids,rd.randint(0,1)))
     reseau.append(precouche)
     for k in range(1,len(liste_couches)):
         couche = []
         precouche = reseau[k-1]
         for i in range(liste_couches[k]):
-            listpoids = np.random.rand(len(precouche))
+            listpoids = np.random.rand(len(precouche),len(precouche))
             if (len(listpoids)!= len(precouche)):
                 print('nok')
             couche.append(Neurone(precouche,listpoids,rd.randint(0,1)))
         reseau.append(couche)
     return reseau
-
+    
 def evaluer_reseau(reseau, data): 
     return reseau[-1][0].evalue(data)
 
