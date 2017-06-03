@@ -6,28 +6,42 @@ import sympy as sp
 
 def faire_reseau(liste_couches,nb_data):
 #    n = len(liste_couches)
-
     reseau = []
     precouche = []
     for k in range(liste_couches[0]):
-        listpoids = np.random.rand(1,nb_data)
+        listpoids = np.random.rand(nb_data)
         precouche.append(NeuroneAlpha(listpoids,rd.randint(0,1)))
     reseau.append(precouche)
     for k in range(1,len(liste_couches)):
         couche = []
         precouche = reseau[k-1]
         for i in range(liste_couches[k]):
-            listpoids = np.random.rand(1,len(precouche))
+            listpoids = np.random.rand(len(precouche))
+            if (len(listpoids)!= len(precouche)):
+                print('nok')
             couche.append(Neurone(precouche,listpoids,rd.randint(0,1)))
         reseau.append(couche)
     return reseau
 
 def evaluer_reseau(reseau, data): 
-    return 10
+    return reseau[-1][0].evalue(data)
+
+def affiche_reseau(reseau):
+    n = len(reseau)
+    for k in range(n):
+        m = len(reseau[k])
+        for i in range(m):
+            print("    "*k,"couche",k,"numero",i)
+
+def affiche_poids(reseau):
+    n = len(reseau)
+    for k in range(n):
+        m = len(reseau[k])
+        for i in range(m):
+            print("     "*k,reseau[k][i].poids,"\n")
 
 
-#prend la matrice d'un plateau en entrée, et la convertie en vecteur ligne  
-#Remarque importante : reshape n'est pas une procédure, et ne modifie pas l'array passé en parametre
+#prend la matrice d'un plateau en entrée, et la transforme en vecteur ligne  
 def platarray(platmat):
     mat = np.array(platmat)
     print(mat,type(mat))
@@ -36,6 +50,7 @@ def platarray(platmat):
     print(n,m)
     mat2 = np.reshape(mat,n*m)
     return mat2
+    
 def platlist(mat):
     l = []
     for k in range(len(mat)-1):
@@ -45,8 +60,8 @@ def platlist(mat):
 
 
 
-#test = faire_reseau([2,5,10],2)
-"""Ici, le probleme est de pouvoir selectionner des poids aléatoirement et de les modifier. Il faut ainsi garder en mémoire les 
+
+"""Ici, le problème est de pouvoir selectionner des poids aléatoirement et de les modifier. Il faut ainsi garder en mémoire les 
 neurones auquels ils appartiennent. On utilise le fait que les liste des poids sont des pointeurs."""     
 def sgd(nbTours,nbechant,reseau,const,cout):
 #    print('avant',reseau[0][0].poids())
@@ -63,7 +78,7 @@ def sgd(nbTours,nbechant,reseau,const,cout):
             
 
 
-#        print('apres',reseau[0][0].poids())
+
         
 #calcul de la dérivée partielle     
 def dp(fonction, variable):
