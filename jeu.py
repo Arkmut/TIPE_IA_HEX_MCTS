@@ -7,7 +7,7 @@ from classeArbre import *
 plateau = Plateau(9, [], (-1,-1))
 joueur = 1
 pasDeGagnant = True
-arbreGeneral = initialisation(plateau)
+arbreGeneral = initialisation(plateau, 1)
 arbreCoups = arbreGeneral
 cheminGeneral = []
 
@@ -32,7 +32,7 @@ while(pasDeGagnant):
     caseOccupee = True
     while(caseOccupee):
         if joueur == 1:
-            arbreCoups = mcts(arbreGeneral, cheminGeneral, arbreCoups, plateau)
+            arbreCoups = mcts(arbreGeneral, cheminGeneral, arbreCoups, plateau, 1)
             x = arbreCoups.racine[0][0]
             y = arbreCoups.racine[0][1]
         elif joueur == 2:
@@ -41,7 +41,7 @@ while(pasDeGagnant):
         caseOccupee = not(plateau.joue(joueur, (x, y)))
     pasDeGagnant = not(plateau.checkVictoire(joueur))
     if joueur == 2: #On actualise l'arbre de recherche de l'IA avec le coup de l'adversaire
-        arbreCoups = rechercheCoup(arbreCoups, plateau, cheminGeneral)
+        arbreCoups = rechercheCoup(arbreCoups, plateau, cheminGeneral, 1)
     if(pasDeGagnant):
         joueur = 3 - joueur
     plateau.affiche2()

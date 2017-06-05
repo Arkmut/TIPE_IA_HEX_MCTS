@@ -65,8 +65,8 @@ def transfoArbre(arbre):
         for elt in arbre.fils:
             transfoArbre(elt)
 
-def initialisation(plateau):
-    coupReac = reaction(plateau, 1)
+def initialisation(plateau, joueur):
+    coupReac = reaction(plateau, joueur)
     if plateau.coup != coupReac:
         arbre = Arbre(plateau.coup)
         arbre.ajout(Arbre(coupReac))
@@ -76,13 +76,13 @@ def initialisation(plateau):
         transfoArbre(arbre)
     return arbre
 
-def rechercheCoup(arbre, plateau, cheminGeneral):
+def rechercheCoup(arbre, plateau, cheminGeneral, joueur):
     for k in range(len(arbre.fils)):
         if plateau.coup == arbre.fils[k].racine[0]:
             cheminGeneral.append(k)
             return arbre.fils[k]
     print("fail")
-    arbre.ajout(initialisation(plateau))
+    arbre.ajout(initialisation(plateau, joueur))
     leng = len(arbre.fils)
     return arbre.fils[leng-1]
     #quand le joueur joue un coup non présent dans l'arbre, n'est pas sensé arriver
@@ -97,23 +97,26 @@ def rechercheCoup(arbre, plateau, cheminGeneral):
         et on note le coup fils avec le résultat de cette partie.
     - Rétro-propagation (Ici backtracking): On actualise les notations des nœuds parents avec le résultat de cette partie.'''
 #Coeur de l'algorithme
-def mcts(arbreGeneral, cheminGeneral, arbre, plateau):
+def mcts(arbreGeneral, cheminGeneral, arbre, plateau, joueur):
     t0 = time.time()
     t1 = t0
     while t1 < t0 + 10:
         p_copy = plateau.deepcopy()
-        select, chemin, joueur = selexpansion(arbre, p_copy, [], 1) #/!\ Modifie l'état du plateau p_copy
-        simulation(select, p_copy, joueur, 1)
+        j = joueur
+        select, chemin, j = selexpansion(arbre, p_copy, [], joueur, j) #/!\ Modifie l'état du plateau p_copy
+        simulation(select, p_copy, joueur, j, 1)
         backtracking(arbreGeneral, cheminGeneral + chemin)
         t1 = time.time()
     coupSelect = maximise(arbre)
     cheminGeneral.append(coupSelect)
-#    print(arbre.racine)
-#    for elt in arbre.fils:
-#        print("   ", elt.racine)
-#    print (arbre.fils[coupSelect].racine)
-#    for elt in arbre.fils[coupSelect].fils:
-#        print("   ", elt.racine)
+    print("joueur =", joueur)
+    print(arbre.racine)
+    for elt in arbre.fils:
+        print("   ", elt.racine)
+    print("fils")
+    print (arbre.fils[coupSelect].racine)
+    for elt in arbre.fils[coupSelect].fils:
+        print("   ", elt.racine)
     #arbreGeneral.affiche()
     return arbre.fils[coupSelect]
     
@@ -150,12 +153,12 @@ def maximise(arbre): #Si l'IA doit jouer
     return rangMax
 
 #renvoie l'arbre du coup sélectionné et le chemin pour parvenir à ce coup
-def selexpansion(arbre, plateau, chemin, joueur):
+def selexpansion(arbre, plateau, chemin, joueur, j):
     if arbre.fils == []:
         if arbre.racine[2] == 0:
-            return arbre, chemin, joueur
-        if joueur == 1:
-            coupReac = reaction(plateau, 1)
+            return arbre, chemin, j
+        if j == joueur:
+            coupReac = reaction(plateau, joueur)
             if coupReac != plateau.coup:
                 arbre.ajout(Arbre([coupReac, [0, 0], -1]))
             else:
@@ -168,10 +171,10 @@ def selexpansion(arbre, plateau, chemin, joueur):
             arbre.fils = coups.fils
         k = rd.randint(0, len(arbre.fils) - 1)
         chemin.append(k)
-        plateau.joue(joueur, arbre.fils[k].racine[0])
+        plateau.joue(j, arbre.fils[k].racine[0])
         if plateau.checkVictoire(joueur):
             arbre.fils[k].racine[2] = 0
-        return arbre.fils[k], chemin, (3 - joueur)
+        return arbre.fils[k], chemin, (3 - j)
     else:
         coupsNonNotes = []
         for k in range(len(arbre.fils)):
@@ -180,33 +183,33 @@ def selexpansion(arbre, plateau, chemin, joueur):
             k = rd.randint(0, len(coupsNonNotes) - 1)
             coupSelect = coupsNonNotes[k]
             chemin.append(coupSelect)
-            plateau.joue(joueur, arbre.fils[coupSelect].racine[0])
+            plateau.joue(j, arbre.fils[coupSelect].racine[0])
             if plateau.checkVictoire(joueur):
                 arbre.fils[coupSelect].racine[2] = 0
-            return arbre.fils[coupSelect], chemin, (3 - joueur)
+            return arbre.fils[coupSelect], chemin, (3 - j)
         else:
             #L'IA essaie de jouer les meilleurs coups pour elle, et le joueur les plus mauvais coups pour l'IA
             coupSelect = maximise(arbre)
-#            if joueur == 1:
+#            if j == joueur:
 #                coupSelect = maximise(arbre)
 #            else:
 #                coupSelect = minimise(arbre)
             chemin.append(coupSelect) # chemin est une liste d'int. 
             #Chaque int indique une place de la liste arbre.fils et donc le coup suivant
-            plateau.joue(joueur, arbre.fils[coupSelect].racine[0])
-            return selexpansion(arbre.fils[coupSelect], plateau, chemin, 3 - joueur) 
+            plateau.joue(j, arbre.fils[coupSelect].racine[0])
+            return selexpansion(arbre.fils[coupSelect], plateau, chemin, joueur, 3 - j) 
         
         
     
-def simulation(arbre, plateau, joueur, n): #n le nb de parties simulées
+def simulation(arbre, plateau, joueur, j, n): #n le nb de parties simulées
     if arbre.racine[2] == 0:
         arbre.racine[1][1] += n
         arbre.racine[1][0] += n
     else:
         for _ in range(n):
-            x = partieAleat(plateau, joueur) # x = 1 ou 2 selon qui gagne
+            x = partieAleat(plateau, j) # x = 1 ou 2 selon qui gagne
             arbre.racine[1][1] += 1 #on rajoute une visite  
-            if x == 1:
+            if x == joueur:
                 arbre.racine[1][0] += 1 #on rajoute une victoire
 
 def backtracking(arbre, chemin):

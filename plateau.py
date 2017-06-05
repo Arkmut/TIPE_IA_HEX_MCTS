@@ -44,7 +44,7 @@ class Plateau:
 
     def affiche2(self):
         pygame.init()
-        fenetre= pygame.display.set_mode((900,510))
+        fenetre= pygame.display.set_mode((800,420))
         fond = pygame.image.load("plateau.png")
         fenetre.blit(fond,(0,0))
         leng = self.taille
