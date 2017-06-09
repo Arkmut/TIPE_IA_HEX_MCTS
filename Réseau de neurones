@@ -1,0 +1,85 @@
+# -*- coding: utf-8 -*-
+
+
+import numpy as np
+import random as rd
+from math import exp
+
+sigmoide = np.vectorize(lambda x:1 / (1 + exp(-x)))
+
+def sigmoide_prim(x):
+    return sigmoide(x)*(1-sigmoide(x))
+
+class Neurone:
+    
+    poids = np.empty(0)
+    biais = 0
+ 
+    def __init__(self, listePoids, biais):
+        self.poids = listePoids.reshape(len(listePoids), 1)
+        self.biais = biais
+
+    def evalue(self, data,param):
+        sortie = np.dot(data.reshape(1, len(self.poids)), self.poids)
+        if param == 0:
+            return sortie[0][0]
+        else:
+            return 1 / (1 + exp( - sortie[0][0] - self.biais))
+
+
+
+class Reseau:
+
+    couches = []
+
+    def __init__(self, forme):
+        couche0 = []
+        for _ in range(forme[0]):
+            biais = rd.gauss(0,1)
+            poids = np.random.randn(1)
+            couche0.append(Neurone(poids, biais))
+        self.couches = [couche0]         
+        for k in range(1, len(forme)):
+            coucheK = []
+            for _ in range(forme[k]):
+                biais = rd.gauss(0,1)
+                listePoids = np.random.randn(forme[k-1])
+                coucheK.append(Neurone(listePoids, biais))
+            self.couches.append(coucheK)
+    
+    def evalue(self, data):
+        resultats = np.array([self.couches[0][k].evalue(data[k],1) for k in range(len(self.couches[0]))])
+        for i in range(1, len(self.couches)):
+            resultats = np.array([self.couches[i][k].evalue(resultats,1) for k in range(len(self.couches[i]))])
+        return resultats
+    
+    def liste_sorties(self, data):
+        resultats = np.array([[self.couches[0][k].evalue(data[k],0) for k in range(len(self.couches[0]))]])
+        resultsig = sigmoide(resultats)
+        for i in range(1, len(self.couches)):
+            evalTemp = np.array([[self.couches[i][k].evalue(resultsig[-1],0) for k in range(len(self.couches[i]))]])
+            resultats = np.concatenate((resultats, evalTemp))
+            resultsig = np.concatenate((resultsig, sigmoide(evalTemp)))
+        return resultats,resultsig
+    
+    def sgd(self, donnees, taille, eta, nb_tour):
+        for i in range(nb_tour):
+            rd.shuffle(donnees)
+            mini = donnees[:taille]
+            for data in mini:
+                update(self, data, eta)
+            print("tour", i, "terminé")
+
+    def update(self, data, eta):
+        x = data[0]
+        y = data[1]
+        delta_nabla_b, delta_nabla_w = backprop(self, x, y)
+        for k in range(len(res.couche)):
+            for i in range(len(res.couche[k])):
+                for j in range(len(res.couche[k][i].poids)):
+                    res.couche[k][i].poids[j] = res.couche[k][i].poids[j] - eta * delta_nabla_w[k][i][j]
+                    res.couche[k][i].biais[j] = res.couche[k][i].biais[j] - eta * delta_nabla_b[k][i][j]
+ 
+    def backprop(self, x, y):
+        dp_w = 
+        dp_b = 
