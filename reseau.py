@@ -9,23 +9,6 @@ def sigmoide(z):
 def sigmoide_prime(z):
     return sigmoide(z) * (1 - sigmoide(z))
 
-
-#class Neurone:
-#    
-#    poids = np.empty(0)
-#    biais = 0
-#    nbEntrees = 0
-# 
-#    def __init__(self, listePoids, biais):
-#        self.poids = listePoids
-#        self.biais = biais
-#        self.nbEntrees = len(self.poids)
-#
-#    def evalue(self, data):
-#        sortie = np.dot(data, self.poids)
-#        return sortie
-
-
 class Reseau:
 
     matPoids = []
