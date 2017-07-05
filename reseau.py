@@ -31,9 +31,9 @@ class Reseau:
     matPoids = []
     matBiais = []
     nbCouches = 0
-
-    def __init__(self, forme):
-        poids0 = np.random.randn(forme[0])
+    tailleData = 0
+    def __init__(self, forme,tailleData):
+        poids0 = np.random.randn(forme[0],tailleData)
         biais0 = np.random.randn(forme[0])
         self.matPoids = [poids0]
         self.matBiais = [biais0]
@@ -45,13 +45,13 @@ class Reseau:
         self.nbCouches = len(forme)
     
     def evalue(self, data):
-        resultats = sigmoide(data * self.matPoids[0])
-        for k in range(1, self.nbCouches):
+        resultats = sigmoide(np.dot(self.matPoids[0],data))
+        for k in range(1,self.nbCouches):
             resultats = sigmoide(np.dot(self.matPoids[k], resultats))
         return resultats
     
     def liste_sorties(self, data):
-        matResult = np.array(data) * self.matPoids[0]
+        matResult = np.dot(self.matPoids[0], data)
         matResultSig = sigmoide(matResult)
         matResult = [matResult]
         matResultSig = [matResultSig]
@@ -68,30 +68,31 @@ class Reseau:
             self.update(miniBatch, eta)
 
     def update(self, miniBatch, eta):
-        nabla_w = [np.zero(len(kouche), len(kouche[0])) for kouche in self.matPoids]
-        nabla_b = [np.zero(len(kouche)) for kouche in self.matBiais]
+        nabla_w = [np.zeros((len(kouche), len(kouche[0]))) for kouche in self.matPoids]
+        nabla_b = [np.zeros(len(kouche)) for kouche in self.matBiais]
         for data in miniBatch:
-            delta_nabla_w, delta_nabla_b = self.backprop(data)
-            for k in len(nabla_w):
+            delta_nabla_b, delta_nabla_w = self.backprop(data)
+            print(delta_nabla_w)
+            for k in range(self.nbCouches):
                 nabla_w[k] = nabla_w[k] + delta_nabla_w[k]
                 nabla_b[k] = nabla_b[k] + delta_nabla_b[k]
         n = len(miniBatch)
-        for k in len(self.couches):
+        for k in range(self.nbCouches):
             self.matPoids[k] = self.matPoids[k] - eta*nabla_w[k]/n
             self.matBiais[k] = self.matBiais[k] - eta*nabla_b[k]/n
     
     
     def backprop(self, data):
         (x, y) = data
-        nabla_w = [np.zero(len(kouche), len(kouche[0])) for kouche in self.matPoids]
-        nabla_b = [np.zero(len(kouche)) for kouche in self.matBiais]
+        nabla_w = [np.zeros((len(kouche), len(kouche[0]))) for kouche in self.matPoids]
+        nabla_b = [np.zeros(len(kouche)) for kouche in self.matBiais]
         resultats, resultsig = self.liste_sorties(x)
         delta = self.deriveeCout(resultsig[-1], y) * sigmoide_prime(resultats[-1])
-        nabla_w[-1] = np.dot(delta.reshape(len(delta), 1), resultsig[-2].reshape(1, len(delta)))
+        nabla_w[-1] = np.dot(delta.reshape(len(delta), 1), resultsig[-2].reshape(1, len(resultsig[-2])))
         nabla_b[-1] = delta
         for l in range(2, self.nbCouches):
             delta = np.dot(self.matPoids[-l+1].transpose(), delta) * sigmoide_prime(resultats[-l])
-            nabla_w[-l] = np.dot(delta.reshape(len(delta), 1), resultsig[-l-1].reshape(1, len(delta)))
+            nabla_w[-l] = np.dot(delta.reshape(len(delta), 1), resultsig[-l-1].reshape(1, len(resultsig[-l-1])))
             nabla_b[-l] = delta
         return nabla_b, nabla_w
  
