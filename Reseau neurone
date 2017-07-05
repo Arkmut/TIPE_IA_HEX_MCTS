@@ -1,86 +1,76 @@
-# -*- coding: utf-8 -*-
-import random as rd
-import numpy as np
-import Classes_neurones 
-import sympy as sp
+class Reseau:
 
-def faire_reseau(liste_couches,nb_data):
-#    n = len(liste_couches)
+    matPoids = []
+    matBiais = []
+    nbCouches = 0
 
-    reseau = []
-    precouche = []
-    for k in range(liste_couches[0]):
-        listpoids = np.random.rand(nb_data,nb_data)
-        precouche.append(NeuroneAlpha(listpoids,rd.randint(0,1)))
-    reseau.append(precouche)
-    for k in range(1,len(liste_couches)):
-        couche = []
-        precouche = reseau[k-1]
-        for i in range(liste_couches[k]):
-            listpoids = np.random.rand(len(precouche),len(precouche))
-            if (len(listpoids)!= len(precouche)):
-                print('nok')
-            couche.append(Neurone(precouche,listpoids,rd.randint(0,1)))
-        reseau.append(couche)
-    return reseau
+    def __init__(self, forme):
+        poids0 = np.random.randn(forme[0],1)
+        biais0 = np.random.randn(forme[0])
+        self.matPoids = [poids0]
+        self.matBiais = [biais0]
+        for k in range(1, len(forme)):
+            poidsK = np.random.randn(forme[k], forme[k-1])
+            biaisK = np.random.randn(forme[k])
+            self.matPoids.append(poidsK)
+            self.matBiais.append(biaisK)
+        self.nbCouches = len(forme)
     
-def evaluer_reseau(reseau, data): 
-    return reseau[-1][0].evalue(data)
-
-def affiche_reseau(reseau):
-    n = len(reseau)
-    for k in range(n):
-        m = len(reseau[k])
-        for i in range(m):
-            print("    "*k,"couche",k,"numero",i)
-
-def affiche_poids(reseau):
-    n = len(reseau)
-    for k in range(n):
-        m = len(reseau[k])
-        for i in range(m):
-            print("     "*k,reseau[k][i].poids,"\n")
-
-
-#prend la matrice d'un plateau en entrée, et la transforme en vecteur ligne  
-def platarray(platmat):
-    mat = np.array(platmat)
-    print(mat,type(mat))
-    n = len(platmat)
-    m = len(platmat[0])
-    print(n,m)
-    mat2 = np.reshape(mat,n*m)
-    return mat2
+    def evalue(self, data):
+        resultats = sigmoide(data * self.matPoids[0])
+        for k in range(1, self.nbCouches):
+            resultats = sigmoide(np.dot(self.matPoids[k], resultats))
+        return resultats
     
-def platlist(mat):
-    l = []
-    for k in range(len(mat)-1):
-        for i in range(len(mat[k])-1):
-            l.append(mat[k][i])
-    return l
+    def liste_sorties(self, data):
+        matResult = np.array(data) * self.matPoids[0]
+        matResultSig = sigmoide(matResult)
+        matResult = [matResult]
+        matResultSig = [matResultSig]
+        for k in range(1, self.nbCouches):
+            evalTemp = np.dot(self.matPoids[k], matResultSig[-1])
+            matResult.append(evalTemp)
+            matResultSig.append(sigmoide(evalTemp))
+        return matResult, matResultSig
+    
+    def sgd(self, donnees, taille, eta, nb_tour):
+        for i in range(nb_tour):
+            rd.shuffle(donnees)
+            miniBatch = donnees[:taille]
+            self.update(miniBatch, eta)
 
-
-
-
-"""Ici, le problème est de pouvoir selectionner des poids aléatoirement et de les modifier. Il faut ainsi garder en mémoire les 
-neurones auquels ils appartiennent. On utilise le fait que les liste des poids sont des pointeurs."""     
-def sgd(nbTours,nbechant,reseau,const,cout):
-#    print('avant',reseau[0][0].poids())
-    for k in range(nbTours):
-        selectNeur = platlist(reseau)
-        rd.shuffle(selectNeur)
-        n1 = len(selectNeur)
-        matpoids = [selectNeur[k].poids() for k in range(len(selectNeur)-1)]
-        n2 = len(matpoids)
-        poidselect = [(rd.randint(0,n1-1),rd.randint(0,len(matpoids)-1)) for _ in range(n2 - 1)]#couple de coordonnées aléatoires
-        for k in range(n2 -1):
-            x,y = poidselect[k]
-            matpoids[x][y] = matpoids[x][y] - (const/nbechant)*dp(cout,matpoids[x][y])
-            
-
-
-
+    def update(self, miniBatch, eta):
+        nabla_w = [np.zeros((len(kouche), len(kouche[0]))) for kouche in self.matPoids]
+        nabla_b = [np.zeros(len(kouche)) for kouche in self.matBiais]
+        for data in miniBatch:
+            delta_nabla_w, delta_nabla_b = self.backprop(data)
+            for k in len(nabla_w):
+                nabla_w[k] = nabla_w[k] + delta_nabla_w[k]
+                nabla_b[k] = nabla_b[k] + delta_nabla_b[k]
+        n = len(miniBatch)
+        for k in len(self.couches):
+            self.matPoids[k] = self.matPoids[k] - eta*nabla_w[k]/n
+            self.matBiais[k] = self.matBiais[k] - eta*nabla_b[k]/n
+    
+    
+    def backprop(self, data):
+        (x, y) = data
         
-#calcul de la dérivée partielle     
-def dp(fonction, variable):
-    return 1
+        nabla_w = [np.zeros((len(kouche), len(kouche[0]))) for kouche in self.matPoids]
+        nabla_b = [np.zeros(len(kouche)) for kouche in self.matBiais]
+        resultats, resultsig = self.liste_sorties(x)
+        
+        delta = self.deriveeCout(resultsig[-1], y) * sigmoide_prime(resultats[-1])
+        print('shape resultsig',np.shape(resultsig),'shape delta',np.shape(delta))
+        nabla_w[-1] = np.dot(delta.reshape(len(delta), 1), resultsig[-2].reshape(1, len(delta)))
+        nabla_b[-1] = delta
+        for l in range(2, self.nbCouches):
+            delta = np.dot(self.matPoids[-l+1].transpose(), delta) * sigmoide_prime(resultats[-l])
+            
+            nabla_w[-l] = np.dot(delta.reshape(len(delta), 1), resultsig[-l-1].reshape(1, len(delta)))
+            nabla_b[-l] = delta
+        return nabla_b, nabla_w
+ 
+    
+    def deriveeCout(self, resultats, y):
+        return (resultats - y) 
